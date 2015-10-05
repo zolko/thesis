@@ -1,13 +1,16 @@
 /**
  */
-package model.impl;
+package hu.bme.thesis.model.impl;
 
-import model.ModelPackage;
-import model.Sensor;
+import hu.bme.thesis.model.Message;
+import hu.bme.thesis.model.ModelPackage;
+import hu.bme.thesis.model.Sensor;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
@@ -20,8 +23,8 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link model.impl.SensorImpl#getId <em>Id</em>}</li>
- *   <li>{@link model.impl.SensorImpl#getMessage <em>Message</em>}</li>
+ *   <li>{@link hu.bme.thesis.model.impl.SensorImpl#getId <em>Id</em>}</li>
+ *   <li>{@link hu.bme.thesis.model.impl.SensorImpl#getMessage <em>Message</em>}</li>
  * </ul>
  *
  * @generated
@@ -48,24 +51,14 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 	protected String id = ID_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getMessage() <em>Message</em>}' attribute.
+	 * The cached value of the '{@link #getMessage() <em>Message</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getMessage()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String MESSAGE_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getMessage() <em>Message</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getMessage()
-	 * @generated
-	 * @ordered
-	 */
-	protected String message = MESSAGE_EDEFAULT;
+	protected Message message;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -112,7 +105,7 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getMessage() {
+	public Message getMessage() {
 		return message;
 	}
 
@@ -121,11 +114,47 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setMessage(String newMessage) {
-		String oldMessage = message;
+	public NotificationChain basicSetMessage(Message newMessage, NotificationChain msgs) {
+		Message oldMessage = message;
 		message = newMessage;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.SENSOR__MESSAGE, oldMessage, message));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ModelPackage.SENSOR__MESSAGE, oldMessage, newMessage);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setMessage(Message newMessage) {
+		if (newMessage != message) {
+			NotificationChain msgs = null;
+			if (message != null)
+				msgs = ((InternalEObject)message).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ModelPackage.SENSOR__MESSAGE, null, msgs);
+			if (newMessage != null)
+				msgs = ((InternalEObject)newMessage).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ModelPackage.SENSOR__MESSAGE, null, msgs);
+			msgs = basicSetMessage(newMessage, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.SENSOR__MESSAGE, newMessage, newMessage));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ModelPackage.SENSOR__MESSAGE:
+				return basicSetMessage(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -156,7 +185,7 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 				setId((String)newValue);
 				return;
 			case ModelPackage.SENSOR__MESSAGE:
-				setMessage((String)newValue);
+				setMessage((Message)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -174,7 +203,7 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 				setId(ID_EDEFAULT);
 				return;
 			case ModelPackage.SENSOR__MESSAGE:
-				setMessage(MESSAGE_EDEFAULT);
+				setMessage((Message)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -191,7 +220,7 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 			case ModelPackage.SENSOR__ID:
 				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
 			case ModelPackage.SENSOR__MESSAGE:
-				return MESSAGE_EDEFAULT == null ? message != null : !MESSAGE_EDEFAULT.equals(message);
+				return message != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -208,8 +237,6 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (id: ");
 		result.append(id);
-		result.append(", message: ");
-		result.append(message);
 		result.append(')');
 		return result.toString();
 	}

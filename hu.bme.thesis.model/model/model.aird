@@ -54,8 +54,8 @@
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
         </ownedElements>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_5iq1gGn5EeWqksRLwy8XRQ" name="message : EString" tooltipText="">
-          <target xmi:type="ecore:EAttribute" href="model.ecore#//Sensor/message"/>
-          <semanticElements xmi:type="ecore:EAttribute" href="model.ecore#//Sensor/message"/>
+          <target xmi:type="ecore:EReference" href="model.ecore#//Sensor/message"/>
+          <semanticElements xmi:type="ecore:EReference" href="model.ecore#//Sensor/message"/>
           <ownedStyle xmi:type="diagram:BundledImage" xmi:id="_8U6ToGn5EeWqksRLwy8XRQ" labelAlignment="LEFT" description="_4v9mMGn5EeWqksRLwy8XRQ">
             <labelFormat>bold</labelFormat>
           </ownedStyle>

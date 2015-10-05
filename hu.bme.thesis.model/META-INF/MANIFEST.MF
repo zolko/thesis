@@ -10,6 +10,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: model,
- model.impl,
- model.util
+Export-Package: hu.bme.thesis.model,
+ hu.bme.thesis.model.impl,
+ hu.bme.thesis.model.util

@@ -1,14 +1,16 @@
 /**
  */
-package model.impl;
+package hu.bme.thesis.model.impl;
 
-import model.ModelFactory;
-import model.ModelPackage;
-import model.Sensor;
+import hu.bme.thesis.model.Message;
+import hu.bme.thesis.model.ModelFactory;
+import hu.bme.thesis.model.ModelPackage;
+import hu.bme.thesis.model.Sensor;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
@@ -27,6 +29,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	private EClass sensorEClass = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass messageEClass = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -37,7 +46,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
-	 * @see model.ModelPackage#eNS_URI
+	 * @see hu.bme.thesis.model.ModelPackage#eNS_URI
 	 * @see #init()
 	 * @generated
 	 */
@@ -110,8 +119,26 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getSensor_Message() {
-		return (EAttribute)sensorEClass.getEStructuralFeatures().get(1);
+	public EReference getSensor_Message() {
+		return (EReference)sensorEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getMessage() {
+		return messageEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMessage_Content() {
+		return (EAttribute)messageEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -144,7 +171,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		// Create classes and their features
 		sensorEClass = createEClass(SENSOR);
 		createEAttribute(sensorEClass, SENSOR__ID);
-		createEAttribute(sensorEClass, SENSOR__MESSAGE);
+		createEReference(sensorEClass, SENSOR__MESSAGE);
+
+		messageEClass = createEClass(MESSAGE);
+		createEAttribute(messageEClass, MESSAGE__CONTENT);
 	}
 
 	/**
@@ -179,7 +209,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		// Initialize classes, features, and operations; add parameters
 		initEClass(sensorEClass, Sensor.class, "Sensor", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getSensor_Id(), ecorePackage.getEString(), "id", null, 1, 1, Sensor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getSensor_Message(), ecorePackage.getEString(), "message", null, 1, 1, Sensor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSensor_Message(), this.getMessage(), null, "message", null, 1, 1, Sensor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(messageEClass, Message.class, "Message", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getMessage_Content(), ecorePackage.getEJavaObject(), "content", null, 1, -1, Message.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

@@ -1,6 +1,6 @@
 /**
  */
-package model;
+package hu.bme.thesis.model;
 
 import org.eclipse.emf.ecore.EFactory;
 
@@ -9,7 +9,7 @@ import org.eclipse.emf.ecore.EFactory;
  * The <b>Factory</b> for the model.
  * It provides a create method for each non-abstract class of the model.
  * <!-- end-user-doc -->
- * @see model.ModelPackage
+ * @see hu.bme.thesis.model.ModelPackage
  * @generated
  */
 public interface ModelFactory extends EFactory {
@@ -19,7 +19,7 @@ public interface ModelFactory extends EFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	ModelFactory eINSTANCE = model.impl.ModelFactoryImpl.init();
+	ModelFactory eINSTANCE = hu.bme.thesis.model.impl.ModelFactoryImpl.init();
 
 	/**
 	 * Returns a new object of class '<em>Sensor</em>'.
@@ -29,6 +29,15 @@ public interface ModelFactory extends EFactory {
 	 * @generated
 	 */
 	Sensor createSensor();
+
+	/**
+	 * Returns a new object of class '<em>Message</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Message</em>'.
+	 * @generated
+	 */
+	Message createMessage();
 
 	/**
 	 * Returns the package supported by this factory.

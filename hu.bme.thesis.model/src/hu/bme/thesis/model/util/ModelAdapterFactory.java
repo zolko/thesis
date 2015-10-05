@@ -1,8 +1,8 @@
 /**
  */
-package model.util;
+package hu.bme.thesis.model.util;
 
-import model.*;
+import hu.bme.thesis.model.*;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EObject;
  * The <b>Adapter Factory</b> for the model.
  * It provides an adapter <code>createXXX</code> method for each class of the model.
  * <!-- end-user-doc -->
- * @see model.ModelPackage
+ * @see hu.bme.thesis.model.ModelPackage
  * @generated
  */
 public class ModelAdapterFactory extends AdapterFactoryImpl {
@@ -72,6 +72,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createSensorAdapter();
 			}
 			@Override
+			public Adapter caseMessage(Message object) {
+				return createMessageAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -92,16 +96,30 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
-	 * Creates a new adapter for an object of class '{@link model.Sensor <em>Sensor</em>}'.
+	 * Creates a new adapter for an object of class '{@link hu.bme.thesis.model.Sensor <em>Sensor</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see model.Sensor
+	 * @see hu.bme.thesis.model.Sensor
 	 * @generated
 	 */
 	public Adapter createSensorAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link hu.bme.thesis.model.Message <em>Message</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see hu.bme.thesis.model.Message
+	 * @generated
+	 */
+	public Adapter createMessageAdapter() {
 		return null;
 	}
 

@@ -2,14 +2,16 @@ package hu.bme.thesis.receiver.mqtt
 
 import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 
 class Subscriber {
 	
 	protected MqttClient client
 	protected MqttConnectOptions connOpts
+	MemoryPersistence persistance
 	
 	new(String brokerAddress, String clientId) {
-		client = new MqttClient(brokerAddress, clientId)
+		client = new MqttClient(brokerAddress, clientId, persistance)
 		connOpts = new MqttConnectOptions
 		connOpts.cleanSession = true
 	}

@@ -1,8 +1,8 @@
 /**
  */
-package model.impl;
+package hu.bme.thesis.model.impl;
 
-import model.*;
+import hu.bme.thesis.model.*;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -57,6 +57,7 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case ModelPackage.SENSOR: return createSensor();
+			case ModelPackage.MESSAGE: return createMessage();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -70,6 +71,16 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	public Sensor createSensor() {
 		SensorImpl sensor = new SensorImpl();
 		return sensor;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Message createMessage() {
+		MessageImpl message = new MessageImpl();
+		return message;
 	}
 
 	/**
