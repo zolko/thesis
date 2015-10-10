@@ -26,7 +26,7 @@ class SensorMapper {
 		
 		val modelSensor = ModelFactory.eINSTANCE.createSensor
 		val message = ModelFactory.eINSTANCE.createMessage
-		modelSensor.message = message
+		modelSensor.messages.add(message)
 		
 		resource.contents.add(modelSensor)
 	}
@@ -50,7 +50,9 @@ class SensorMapper {
 	def writeValueToModel(Sensor sensor) {
 		val modelSensor = resource.contents.get(0) as hu.bme.thesis.model.Sensor
 		modelSensor.id = sensor.id
-		modelSensor.message.content.add("Content")
+		val message = ModelFactory.eINSTANCE.createMessage
+		message.contents.add("Content")
+		modelSensor.messages.add(message)
 	}
 
 }

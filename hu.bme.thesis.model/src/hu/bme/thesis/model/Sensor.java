@@ -2,6 +2,7 @@
  */
 package hu.bme.thesis.model;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -14,7 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link hu.bme.thesis.model.Sensor#getId <em>Id</em>}</li>
- *   <li>{@link hu.bme.thesis.model.Sensor#getMessage <em>Message</em>}</li>
+ *   <li>{@link hu.bme.thesis.model.Sensor#getMessages <em>Messages</em>}</li>
  * </ul>
  *
  * @see hu.bme.thesis.model.ModelPackage#getSensor()
@@ -49,29 +50,19 @@ public interface Sensor extends EObject {
 	void setId(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Message</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Messages</b></em>' containment reference list.
+	 * The list contents are of type {@link hu.bme.thesis.model.Message}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Message</em>' containment reference isn't clear,
+	 * If the meaning of the '<em>Messages</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Message</em>' containment reference.
-	 * @see #setMessage(Message)
-	 * @see hu.bme.thesis.model.ModelPackage#getSensor_Message()
+	 * @return the value of the '<em>Messages</em>' containment reference list.
+	 * @see hu.bme.thesis.model.ModelPackage#getSensor_Messages()
 	 * @model containment="true" required="true"
 	 * @generated
 	 */
-	Message getMessage();
-
-	/**
-	 * Sets the value of the '{@link hu.bme.thesis.model.Sensor#getMessage <em>Message</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Message</em>' containment reference.
-	 * @see #getMessage()
-	 * @generated
-	 */
-	void setMessage(Message value);
+	EList<Message> getMessages();
 
 } // Sensor

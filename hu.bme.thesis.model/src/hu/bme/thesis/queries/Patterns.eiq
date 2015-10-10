@@ -1,0 +1,7 @@
+package hu.bme.thesis.queries
+
+import "model.meta"
+
+pattern sensors(sensor: Sensor) {
+	Sensor(sensor);
+}

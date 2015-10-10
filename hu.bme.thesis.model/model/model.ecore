@@ -4,11 +4,11 @@
   <eClassifiers xsi:type="ecore:EClass" name="Sensor">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="message" lowerBound="1"
-        eType="#//Message" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="messages" lowerBound="1"
+        upperBound="-1" eType="#//Message" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Message">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" lowerBound="1"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contents" lowerBound="1"
         upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
   </eClassifiers>
 </ecore:EPackage>

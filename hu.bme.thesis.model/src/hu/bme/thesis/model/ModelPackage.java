@@ -76,13 +76,13 @@ public interface ModelPackage extends EPackage {
 	int SENSOR__ID = 0;
 
 	/**
-	 * The feature id for the '<em><b>Message</b></em>' containment reference.
+	 * The feature id for the '<em><b>Messages</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SENSOR__MESSAGE = 1;
+	int SENSOR__MESSAGES = 1;
 
 	/**
 	 * The number of structural features of the '<em>Sensor</em>' class.
@@ -113,13 +113,13 @@ public interface ModelPackage extends EPackage {
 	int MESSAGE = 1;
 
 	/**
-	 * The feature id for the '<em><b>Content</b></em>' attribute list.
+	 * The feature id for the '<em><b>Contents</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MESSAGE__CONTENT = 0;
+	int MESSAGE__CONTENTS = 0;
 
 	/**
 	 * The number of structural features of the '<em>Message</em>' class.
@@ -162,15 +162,15 @@ public interface ModelPackage extends EPackage {
 	EAttribute getSensor_Id();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link hu.bme.thesis.model.Sensor#getMessage <em>Message</em>}'.
+	 * Returns the meta object for the containment reference list '{@link hu.bme.thesis.model.Sensor#getMessages <em>Messages</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Message</em>'.
-	 * @see hu.bme.thesis.model.Sensor#getMessage()
+	 * @return the meta object for the containment reference list '<em>Messages</em>'.
+	 * @see hu.bme.thesis.model.Sensor#getMessages()
 	 * @see #getSensor()
 	 * @generated
 	 */
-	EReference getSensor_Message();
+	EReference getSensor_Messages();
 
 	/**
 	 * Returns the meta object for class '{@link hu.bme.thesis.model.Message <em>Message</em>}'.
@@ -183,15 +183,15 @@ public interface ModelPackage extends EPackage {
 	EClass getMessage();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link hu.bme.thesis.model.Message#getContent <em>Content</em>}'.
+	 * Returns the meta object for the attribute list '{@link hu.bme.thesis.model.Message#getContents <em>Contents</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Content</em>'.
-	 * @see hu.bme.thesis.model.Message#getContent()
+	 * @return the meta object for the attribute list '<em>Contents</em>'.
+	 * @see hu.bme.thesis.model.Message#getContents()
 	 * @see #getMessage()
 	 * @generated
 	 */
-	EAttribute getMessage_Content();
+	EAttribute getMessage_Contents();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -235,12 +235,12 @@ public interface ModelPackage extends EPackage {
 		EAttribute SENSOR__ID = eINSTANCE.getSensor_Id();
 
 		/**
-		 * The meta object literal for the '<em><b>Message</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Messages</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference SENSOR__MESSAGE = eINSTANCE.getSensor_Message();
+		EReference SENSOR__MESSAGES = eINSTANCE.getSensor_Messages();
 
 		/**
 		 * The meta object literal for the '{@link hu.bme.thesis.model.impl.MessageImpl <em>Message</em>}' class.
@@ -253,12 +253,12 @@ public interface ModelPackage extends EPackage {
 		EClass MESSAGE = eINSTANCE.getMessage();
 
 		/**
-		 * The meta object literal for the '<em><b>Content</b></em>' attribute list feature.
+		 * The meta object literal for the '<em><b>Contents</b></em>' attribute list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute MESSAGE__CONTENT = eINSTANCE.getMessage_Content();
+		EAttribute MESSAGE__CONTENTS = eINSTANCE.getMessage_Contents();
 
 	}
 

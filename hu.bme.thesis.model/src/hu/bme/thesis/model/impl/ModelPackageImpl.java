@@ -119,7 +119,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getSensor_Message() {
+	public EReference getSensor_Messages() {
 		return (EReference)sensorEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -137,7 +137,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getMessage_Content() {
+	public EAttribute getMessage_Contents() {
 		return (EAttribute)messageEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -171,10 +171,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		// Create classes and their features
 		sensorEClass = createEClass(SENSOR);
 		createEAttribute(sensorEClass, SENSOR__ID);
-		createEReference(sensorEClass, SENSOR__MESSAGE);
+		createEReference(sensorEClass, SENSOR__MESSAGES);
 
 		messageEClass = createEClass(MESSAGE);
-		createEAttribute(messageEClass, MESSAGE__CONTENT);
+		createEAttribute(messageEClass, MESSAGE__CONTENTS);
 	}
 
 	/**
@@ -209,10 +209,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		// Initialize classes, features, and operations; add parameters
 		initEClass(sensorEClass, Sensor.class, "Sensor", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getSensor_Id(), ecorePackage.getEString(), "id", null, 1, 1, Sensor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSensor_Message(), this.getMessage(), null, "message", null, 1, 1, Sensor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSensor_Messages(), this.getMessage(), null, "messages", null, 1, -1, Sensor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(messageEClass, Message.class, "Message", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getMessage_Content(), ecorePackage.getEJavaObject(), "content", null, 1, -1, Message.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMessage_Contents(), ecorePackage.getEJavaObject(), "contents", null, 1, -1, Message.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

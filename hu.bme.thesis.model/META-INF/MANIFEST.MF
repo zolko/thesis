@@ -6,10 +6,14 @@ Bundle-Version: 0.1.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.emf.ecore;visibility:=reexport
-Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: hu.bme.thesis.model,
  hu.bme.thesis.model.impl,
- hu.bme.thesis.model.util
+ hu.bme.thesis.model.util,
+ hu.bme.thesis.queries,
+ hu.bme.thesis.queries.util
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.ecore;visibility:=reexport,
+ org.eclipse.incquery.runtime;bundle-version="1.1.0",
+ org.apache.log4j;bundle-version="1.2.15"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
