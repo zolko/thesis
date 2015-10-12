@@ -58,6 +58,7 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 		switch (eClass.getClassifierID()) {
 			case ModelPackage.SENSOR: return createSensor();
 			case ModelPackage.MESSAGE: return createMessage();
+			case ModelPackage.MQTT_SETUP: return createMqttSetup();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -81,6 +82,16 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	public Message createMessage() {
 		MessageImpl message = new MessageImpl();
 		return message;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MqttSetup createMqttSetup() {
+		MqttSetupImpl mqttSetup = new MqttSetupImpl();
+		return mqttSetup;
 	}
 
 	/**

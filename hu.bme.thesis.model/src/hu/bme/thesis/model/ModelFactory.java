@@ -40,6 +40,15 @@ public interface ModelFactory extends EFactory {
 	Message createMessage();
 
 	/**
+	 * Returns a new object of class '<em>Mqtt Setup</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Mqtt Setup</em>'.
+	 * @generated
+	 */
+	MqttSetup createMqttSetup();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

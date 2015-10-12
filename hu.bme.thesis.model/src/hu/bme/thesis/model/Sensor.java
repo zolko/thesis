@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link hu.bme.thesis.model.Sensor#getId <em>Id</em>}</li>
  *   <li>{@link hu.bme.thesis.model.Sensor#getMessages <em>Messages</em>}</li>
+ *   <li>{@link hu.bme.thesis.model.Sensor#getSetup <em>Setup</em>}</li>
  * </ul>
  *
  * @see hu.bme.thesis.model.ModelPackage#getSensor()
@@ -64,5 +65,31 @@ public interface Sensor extends EObject {
 	 * @generated
 	 */
 	EList<Message> getMessages();
+
+	/**
+	 * Returns the value of the '<em><b>Setup</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Setup</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Setup</em>' reference.
+	 * @see #setSetup(MqttSetup)
+	 * @see hu.bme.thesis.model.ModelPackage#getSensor_Setup()
+	 * @model required="true"
+	 * @generated
+	 */
+	MqttSetup getSetup();
+
+	/**
+	 * Sets the value of the '{@link hu.bme.thesis.model.Sensor#getSetup <em>Setup</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Setup</em>' reference.
+	 * @see #getSetup()
+	 * @generated
+	 */
+	void setSetup(MqttSetup value);
 
 } // Sensor

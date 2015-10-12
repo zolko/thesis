@@ -4,6 +4,7 @@ package hu.bme.thesis.model.impl;
 
 import hu.bme.thesis.model.Message;
 import hu.bme.thesis.model.ModelPackage;
+import hu.bme.thesis.model.MqttSetup;
 import hu.bme.thesis.model.Sensor;
 
 import java.util.Collection;
@@ -29,6 +30,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <ul>
  *   <li>{@link hu.bme.thesis.model.impl.SensorImpl#getId <em>Id</em>}</li>
  *   <li>{@link hu.bme.thesis.model.impl.SensorImpl#getMessages <em>Messages</em>}</li>
+ *   <li>{@link hu.bme.thesis.model.impl.SensorImpl#getSetup <em>Setup</em>}</li>
  * </ul>
  *
  * @generated
@@ -63,6 +65,16 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 	 * @ordered
 	 */
 	protected EList<Message> messages;
+
+	/**
+	 * The cached value of the '{@link #getSetup() <em>Setup</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSetup()
+	 * @generated
+	 * @ordered
+	 */
+	protected MqttSetup setup;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -121,6 +133,44 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public MqttSetup getSetup() {
+		if (setup != null && setup.eIsProxy()) {
+			InternalEObject oldSetup = (InternalEObject)setup;
+			setup = (MqttSetup)eResolveProxy(oldSetup);
+			if (setup != oldSetup) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ModelPackage.SENSOR__SETUP, oldSetup, setup));
+			}
+		}
+		return setup;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MqttSetup basicGetSetup() {
+		return setup;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setSetup(MqttSetup newSetup) {
+		MqttSetup oldSetup = setup;
+		setup = newSetup;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.SENSOR__SETUP, oldSetup, setup));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -142,6 +192,9 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 				return getId();
 			case ModelPackage.SENSOR__MESSAGES:
 				return getMessages();
+			case ModelPackage.SENSOR__SETUP:
+				if (resolve) return getSetup();
+				return basicGetSetup();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -162,6 +215,9 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 				getMessages().clear();
 				getMessages().addAll((Collection<? extends Message>)newValue);
 				return;
+			case ModelPackage.SENSOR__SETUP:
+				setSetup((MqttSetup)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -180,6 +236,9 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 			case ModelPackage.SENSOR__MESSAGES:
 				getMessages().clear();
 				return;
+			case ModelPackage.SENSOR__SETUP:
+				setSetup((MqttSetup)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -196,6 +255,8 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
 			case ModelPackage.SENSOR__MESSAGES:
 				return messages != null && !messages.isEmpty();
+			case ModelPackage.SENSOR__SETUP:
+				return setup != null;
 		}
 		return super.eIsSet(featureID);
 	}

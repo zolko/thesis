@@ -38,6 +38,7 @@ class ThesisCodeGeneration {
 	
 	def fire() {
 		fireAllCurrent(ruleProvider.sensorsRule)
+		fireAllCurrent(ruleProvider.sensorsWithMqttRule)
 	}
 	
 	def dispose() {

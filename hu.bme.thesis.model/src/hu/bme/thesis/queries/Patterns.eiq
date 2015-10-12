@@ -5,3 +5,8 @@ import "model.meta"
 pattern sensors(sensor: Sensor) {
 	Sensor(sensor);
 }
+
+pattern sensorsWithMqtt(sensor: Sensor, setup: MqttSetup) {
+	Sensor(sensor);
+	MqttSetup(setup);
+}
