@@ -28,7 +28,7 @@ class ThesisRuleProvider {
 	
 	@Accessors(PUBLIC_GETTER)
 	val sensorsRule = createRule.precondition(sensors).action[ match |
-		println('''Sensor id: «match.sensor.id»''')
+		println('''Sensor id: Â«match.sensor.idÂ»''')
 	].build
 	
 	@Accessors(PUBLIC_GETTER)
@@ -47,121 +47,152 @@ class ThesisRuleProvider {
 	}
 	
 	private def createSubscriber(SensorsWithMqttMatch match) {
-		val subscriberFile = new File("C:\\Eclipses\\Thesis\\ws\\generated\\" + match.sensor.id + "Subscriber.java")
+		val subscriberFile = new File(System.getProperty("user.dir") + "\\resources\\" + match.sensor.id + "Receiver.java")
 		if (subscriberFile != null && subscriberFile.exists) {
 			subscriberFile.delete
 		}
 		subscriberFile.createNewFile
 		val writer = new FileWriter(subscriberFile)
-		val fileContent = '''import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
-import org.eclipse.paho.client.mqttv3.MqttCallback
-import org.eclipse.paho.client.mqttv3.MqttClient
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions
-import org.eclipse.paho.client.mqttv3.MqttMessage
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
-
-class «match.sensor.id»Receiver implements MqttCallback {
-	
-	private MqttClient client;
-	private MqttConnectOptions connOpts;
-	private MemoryPersistence persistance;
-	
-	public «match.sensor.id»Receiver() {
-		persistance = new MemoryPersistence();
-		client = new MqttClient("«match.setup.brokerUrl»", "«match.sensor.id.toUpperCase»_SUBSCRIBER", persistance);
-		connOpts = new MqttConnectOptions();
-		connOpts.setCleanSession(true);
-		client.setCallback(this);
-	}
-	
-	public void connect() {
-		client.connect(connOpts);
-	}
-	
-	public void subscribe() {
-		client.subscribe(«match.sensor.id»);
-	}
-	
-	public void unsubscribe() {
-		client.unsubscribe(«match.sensor.id»);
-	}
-	
-	public void disconnect() {
-		client.disconnect();
-	}
-	
-	@Override
-	public void connectionLost(Throwable arg0) {
-		throw new UnsupportedOperationException("Connection lost!");
-	}
-
-	@Override
-	public void deliveryComplete(IMqttDeliveryToken arg0) {
-		System.out.println("Delivery completed!");
-	}
-
-	@Override
-	public void messageArrived(String topic, MqttMessage message) throws Exception {
-		System.out.println("-------------------------------------");
-		System.out.println("| Topic:" + topic);
-		System.out.println("| Sensor ID:" + message.getPayload.toString());
-		System.out.println("-------------------------------------");
-	}
-}
+		val fileContent = '''
+		import de.undercouch.bson4jackson.BsonFactory;
+		import hu.bme.thesis.model.ModelFactory;
+		import org.eclipse.emf.common.util.URI;
+		import org.eclipse.emf.ecore.resource.Resource;
+		import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+		import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+		import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+		import org.eclipse.paho.client.mqttv3.MqttCallback;
+		import org.eclipse.paho.client.mqttv3.MqttClient;
+		import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+		import org.eclipse.paho.client.mqttv3.MqttMessage;
+		import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+		
+		class Â«match.sensor.idÂ»Receiver implements MqttCallback {
+			
+			private MqttClient client;
+			private MqttConnectOptions connOpts;
+			private MemoryPersistence persistance;
+			private BsonFactory factory;
+			private Resource resource;
+			
+			public Â«match.sensor.idÂ»Receiver() {
+				factory = new BsonFactory();
+				Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+				Map<String,Object> m = reg.getExtensionToFactoryMap();
+		        m.put("model", new XMIResourceFactoryImpl());
+		        ResourceSet resourceSet = new ResourceSetImpl();
+		        resource = resourceSet.createResource(URI.createURI("model/thesis.model"));
+				
+				persistance = new MemoryPersistence();
+				client = new MqttClient("Â«match.setup.brokerUrlÂ»", "Â«match.sensor.id.toUpperCaseÂ»_SUBSCRIBER", persistance);
+				connOpts = new MqttConnectOptions();
+				connOpts.setCleanSession(true);
+				client.setCallback(this);
+			}
+			
+			public void connect() {
+				client.connect(connOpts);
+			}
+			
+			public void subscribe() {
+				client.subscribe(Â«match.sensor.idÂ»);
+			}
+			
+			public void unsubscribe() {
+				client.unsubscribe(Â«match.sensor.idÂ»);
+			}
+			
+			public void disconnect() {
+				client.disconnect();
+			}
+			
+			@Override
+			public void connectionLost(Throwable arg0) {
+				throw new UnsupportedOperationException("Connection lost!");
+			}
+		
+			@Override
+			public void deliveryComplete(IMqttDeliveryToken arg0) {
+				System.out.println("Delivery completed!");
+			}
+		
+			@Override
+			public void messageArrived(String topic, MqttMessage message) throws Exception {
+				System.out.println("-------------------------------------");
+				System.out.println("| Topic:" + topic);
+				System.out.println("| Sensor ID:" + message.getPayload().toString());
+				System.out.println("-------------------------------------");
+				addValueToModel(message.getPayload());
+			}
+			
+			private void addValueToModel(byte[] bytes) {
+				JsonParser parser = factory.createParser(bytes);
+				Sensor sensor = ModelFactory.eINSTANCE.createSensor();
+				parser.nextToken();
+				while (parser.nextToken() != JsonToken.END_OBJECT) {
+					String fieldname = parser.getCurrentName();
+					parser.nextToken();
+					if (fieldname.equals("id")) {
+						sensor.setId(parser.getText());
+					}
+				}
+			}
+		}
 		'''
 		writer.write(fileContent)
 		writer.close
 	}
 	
 	private def createPublisher(SensorsWithMqttMatch match) {
-		val publisherFile = new File("C:\\Eclipses\\Thesis\\ws\\generated\\" + match.sensor.id + "Publisher.c")
+		val publisherFile = new File(System.getProperty("user.dir") + "\\resources\\" + match.sensor.id + "Publisher.c")
 		if (publisherFile != null && publisherFile.exists) {
 			publisherFile.delete
 		}
 		publisherFile.createNewFile
 		val writer = new FileWriter(publisherFile)
-		val fileContent = '''#include "stdio.h"
-#include "stdlib.h"
-#include "string.h"
-#include "MQTTClient.h"
-
-int main(int argc, char* argv[])
-{
-    MQTTClient client;
-
-	init(&client, «match.setup.brokerUrl», "«match.sensor.id.toUpperCase»_PUBLISHER");
-	connect(&client, 1);
-	char* payload = "Hello World!";
-	publishMessage(&client, "«match.sensor.id»", «match.setup.qos», payload);
-	disconnect(&client);
-
-	return 0;
-}
-
-void init(MQTTClient client, char* brokerUrl, char* clientId) {
-	MQTTClient_create(&client, brokerUrl, clientId, MQTTCLIENT_PERSISTENCE_NONE, NULL);
-}
-
-void connect(MQTTClient client, int cleansession) {
-	MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
-	conn_opts.cleansession = cleansession;
-	MQTTClient_connect(client, &conn_opts);
-}
-
-void publishMessage(MQTTClient client, char* topic, int qos, void* payload) {
-	MQTTClient_deliveryToken token;
-	MQTTClient_message message = MQTTClient_message_initializer;
-	message.payload = payload;
-	message.payloadlen = sizeof(payload);
-	message.qos = qos;
-	MQTTClient_publishMessage(client, topic, &message, &token);
-}
-
-void disconnect(MQTTClient client) {
-	MQTTClient_disconnect(client, 1000L);
-	MQTTClient_destroy(&client);
-}
-'''
+		val fileContent = '''
+		#include "stdio.h"
+		#include "stdlib.h"
+		#include "string.h"
+		#include "MQTTClient.h"
+		
+		int main(int argc, char* argv[])
+		{
+		    MQTTClient client;
+		
+			init(&client);
+			connect(&client, 1);
+			char* message = "Hello World!";
+			publishMessage(&client, message);
+			disconnect(&client);
+		
+			return 0;
+		}
+		
+		void init(MQTTClient client) {
+			MQTTClient_create(&client, "Â«match.setup.brokerUrlÂ»", "Â«match.sensor.id.toUpperCaseÂ»_PUBLISHER", MQTTCLIENT_PERSISTENCE_NONE, NULL);
+		}
+		
+		void connect(MQTTClient client, int cleansession) {
+			MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
+			conn_opts.cleansession = cleansession;
+			MQTTClient_connect(client, &conn_opts);
+		}
+		
+		void publishMessage(MQTTClient client, void* payload) {
+			MQTTClient_deliveryToken token;
+			MQTTClient_message message = MQTTClient_message_initializer;
+			message.payload = payload;
+			message.payloadlen = sizeof(payload);
+			message.qos = Â«match.setup.qosÂ»;
+			MQTTClient_publishMessage(client, "Â«match.sensor.idÂ»", &message, &token);
+		}
+		
+		void disconnect(MQTTClient client) {
+			MQTTClient_disconnect(client, 1000L);
+			MQTTClient_destroy(&client);
+		}
+		'''
 		writer.write(fileContent)
 		writer.close
 	}

@@ -10,6 +10,7 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
+import com.fasterxml.jackson.core.JsonToken
 
 class SensorMapper {
 
@@ -53,6 +54,19 @@ class SensorMapper {
 		val message = ModelFactory.eINSTANCE.createMessage
 		message.contents.add("Content")
 		modelSensor.messages.add(message)
+	}
+	
+	def addValueToModel(byte[] bytes) {
+		val parser = factory.createParser(bytes)
+		val sensor = ModelFactory.eINSTANCE.createSensor
+		parser.nextToken
+		while (parser.nextToken != JsonToken.END_OBJECT) {
+			val fieldname = parser.currentName
+			parser.nextToken
+			if (fieldname.equals("id")) {
+				sensor.id = parser.text
+			}
+		}
 	}
 
 }
