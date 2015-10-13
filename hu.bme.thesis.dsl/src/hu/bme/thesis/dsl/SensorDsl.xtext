@@ -1,5 +1,7 @@
 grammar hu.bme.thesis.dsl.SensorDsl with org.eclipse.xtext.common.Terminals
 
+import "http://www.eclipse.org/xtext/common/JavaVMTypes" as jvmTypes
+
 generate sensorDsl "http://www.bme.hu/thesis/dsl/SensorDsl"
 
 Model:
@@ -12,8 +14,7 @@ Model:
 
 MqttSetup:
 	"mqttSetup" "{"
-		"brokerUrl:" brokerUrl = STRING
-		"qos:" qos = INT
+		"brokerUrl" brokerUrl = STRING
 	"}" 
 ;
 
@@ -21,15 +22,18 @@ Type:
 	DataType | MessageType
 ;
 
-DataType:
-	"dataType" name = ID
-;
-
 MessageType:
 	"messageType" name=ID "{"
 		(parameters += MessageParameter)*
+		("qos" qos = INT)?
 	"}"
 ;
+
+DataType:
+	"dataType" name = ID "mapped-to" type = [jvmTypes::JvmType|QualifiedName]
+;
+
+QualifiedName: ID ('.' ID)*;
 
 MessageParameter:
 	"parameter" type = [Type] name = ID
@@ -37,7 +41,7 @@ MessageParameter:
 
 Sensor:
 	"sensor" "{"
-		"name:" name = ID
-		"messageType:" messageType = [MessageType]
+		"name" name = ID
+		"messageType" messageType = [MessageType]
 	"}"
 ;
