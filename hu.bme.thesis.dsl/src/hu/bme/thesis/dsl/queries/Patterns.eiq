@@ -1,0 +1,15 @@
+package hu.bme.thesis.dsl.queries
+
+import "http://www.bme.hu/thesis/dsl/SensorDsl"
+
+pattern sensors(sensor: Sensor) {
+	Sensor(sensor);
+}
+
+pattern messages(message: Message) {
+	Message(message);
+}
+
+pattern model(model: Model) {
+	Model(model);
+}

@@ -1,7 +1,5 @@
 grammar hu.bme.thesis.dsl.SensorDsl with org.eclipse.xtext.common.Terminals
 
-import "http://www.eclipse.org/xtext/common/JavaVMTypes" as jvmTypes
-
 generate sensorDsl "http://www.bme.hu/thesis/dsl/SensorDsl"
 
 Model:
@@ -31,7 +29,7 @@ Message:
 ;
 
 DataType:
-	"dataType" name = ID ("mapped-to" type = [jvmTypes::JvmType|QualifiedName])?
+	"dataType" name = ID
 ;
 
 QualifiedName: ID ('.' ID)*;

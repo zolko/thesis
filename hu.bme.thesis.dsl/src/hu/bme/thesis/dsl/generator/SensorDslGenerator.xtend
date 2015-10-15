@@ -6,6 +6,9 @@ package hu.bme.thesis.dsl.generator
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
+import hu.bme.thesis.dsl.viatra.CodeGeneration
+import org.eclipse.incquery.runtime.api.IncQueryEngine
+import org.eclipse.incquery.runtime.emf.EMFScope
 
 /**
  * Generates code from your model files on save.
@@ -15,6 +18,14 @@ import org.eclipse.xtext.generator.IGenerator
 class SensorDslGenerator implements IGenerator {
 
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
+		val resourceSet = resource.resourceSet
+		val managedEngine = IncQueryEngine.on(new EMFScope(resourceSet))
+		
+		val thesisCodeGeneration = new CodeGeneration
+		println(resource.contents.get(0).toString)
+		thesisCodeGeneration.initialize(managedEngine)
+		thesisCodeGeneration.fire
+		thesisCodeGeneration.dispose
 //		fsa.generateFile('greetings.txt', 'People to greet: ' + 
 //			resource.allContents
 //				.filter(typeof(Greeting))
