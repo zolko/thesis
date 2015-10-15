@@ -24,6 +24,6 @@ class SensorDslFormatter extends AbstractFormatter2 {
 
 	def dispatch void format(Sensor sensor, extension IFormattableDocument document) {
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
-		format(sensor.getMessageType(), document);
+		format(sensor.getMessages(), document);
 	}
 }

@@ -18,9 +18,9 @@
     <genClasses ecoreClass="SensorDsl.ecore#//Type">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorDsl.ecore#//Type/name"/>
     </genClasses>
-    <genClasses ecoreClass="SensorDsl.ecore#//MessageType">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SensorDsl.ecore#//MessageType/parameters"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorDsl.ecore#//MessageType/qos"/>
+    <genClasses ecoreClass="SensorDsl.ecore#//Message">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SensorDsl.ecore#//Message/parameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorDsl.ecore#//Message/qos"/>
     </genClasses>
     <genClasses ecoreClass="SensorDsl.ecore#//DataType">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference SensorDsl.ecore#//DataType/type"/>
@@ -31,7 +31,7 @@
     </genClasses>
     <genClasses ecoreClass="SensorDsl.ecore#//Sensor">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorDsl.ecore#//Sensor/name"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference SensorDsl.ecore#//Sensor/messageType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference SensorDsl.ecore#//Sensor/messages"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

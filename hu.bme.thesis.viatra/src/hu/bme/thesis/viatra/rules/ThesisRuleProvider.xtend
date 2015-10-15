@@ -28,7 +28,7 @@ class ThesisRuleProvider {
 	
 	@Accessors(PUBLIC_GETTER)
 	val sensorsRule = createRule.precondition(sensors).action[ match |
-		println('''Sensor id: Â«match.sensor.idÂ»''')
+		println('''Sensor id: «match.sensor.id»''')
 	].build
 	
 	@Accessors(PUBLIC_GETTER)
@@ -67,7 +67,7 @@ class ThesisRuleProvider {
 		import org.eclipse.paho.client.mqttv3.MqttMessage;
 		import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 		
-		class Â«match.sensor.idÂ»Receiver implements MqttCallback {
+		class «match.sensor.id»Receiver implements MqttCallback {
 			
 			private MqttClient client;
 			private MqttConnectOptions connOpts;
@@ -75,7 +75,7 @@ class ThesisRuleProvider {
 			private BsonFactory factory;
 			private Resource resource;
 			
-			public Â«match.sensor.idÂ»Receiver() {
+			public «match.sensor.id»Receiver() {
 				factory = new BsonFactory();
 				Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 				Map<String,Object> m = reg.getExtensionToFactoryMap();
@@ -84,7 +84,7 @@ class ThesisRuleProvider {
 		        resource = resourceSet.createResource(URI.createURI("model/thesis.model"));
 				
 				persistance = new MemoryPersistence();
-				client = new MqttClient("Â«match.setup.brokerUrlÂ»", "Â«match.sensor.id.toUpperCaseÂ»_SUBSCRIBER", persistance);
+				client = new MqttClient("«match.setup.brokerUrl»", "«match.sensor.id.toUpperCase»_SUBSCRIBER", persistance);
 				connOpts = new MqttConnectOptions();
 				connOpts.setCleanSession(true);
 				client.setCallback(this);
@@ -95,11 +95,11 @@ class ThesisRuleProvider {
 			}
 			
 			public void subscribe() {
-				client.subscribe(Â«match.sensor.idÂ»);
+				client.subscribe(«match.sensor.id»);
 			}
 			
 			public void unsubscribe() {
-				client.unsubscribe(Â«match.sensor.idÂ»);
+				client.unsubscribe(«match.sensor.id»);
 			}
 			
 			public void disconnect() {
@@ -170,7 +170,7 @@ class ThesisRuleProvider {
 		}
 		
 		void init(MQTTClient client) {
-			MQTTClient_create(&client, "Â«match.setup.brokerUrlÂ»", "Â«match.sensor.id.toUpperCaseÂ»_PUBLISHER", MQTTCLIENT_PERSISTENCE_NONE, NULL);
+			MQTTClient_create(&client, "«match.setup.brokerUrl»", "«match.sensor.id.toUpperCase»_PUBLISHER", MQTTCLIENT_PERSISTENCE_NONE, NULL);
 		}
 		
 		void connect(MQTTClient client, int cleansession) {
@@ -184,8 +184,8 @@ class ThesisRuleProvider {
 			MQTTClient_message message = MQTTClient_message_initializer;
 			message.payload = payload;
 			message.payloadlen = sizeof(payload);
-			message.qos = Â«match.setup.qosÂ»;
-			MQTTClient_publishMessage(client, "Â«match.sensor.idÂ»", &message, &token);
+			message.qos = «match.setup.qos»;
+			MQTTClient_publishMessage(client, "«match.sensor.id»", &message, &token);
 		}
 		
 		void disconnect(MQTTClient client) {

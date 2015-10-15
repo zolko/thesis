@@ -19,18 +19,19 @@ MqttSetup:
 ;
 
 Type:
-	DataType | MessageType
+	DataType | Message
 ;
 
-MessageType:
-	"messageType" name=ID "{"
+Message:
+	"message" "{"
+		"name" name = ID
 		(parameters += MessageParameter)*
 		("qos" qos = INT)?
 	"}"
 ;
 
 DataType:
-	"dataType" name = ID "mapped-to" type = [jvmTypes::JvmType|QualifiedName]
+	"dataType" name = ID ("mapped-to" type = [jvmTypes::JvmType|QualifiedName])?
 ;
 
 QualifiedName: ID ('.' ID)*;
@@ -42,6 +43,7 @@ MessageParameter:
 Sensor:
 	"sensor" "{"
 		"name" name = ID
-		"messageType" messageType = [MessageType]
+		"messages" messages += [Message]
+		("," messages += [Message])*
 	"}"
 ;
