@@ -50,7 +50,7 @@ class RuleProvider {
 	}
 	
 	public def generateGeneralSubscriber() {
-		val subscriberFile = new File("C:\\Eclipses\\Thesis\\ws\\Subscriber.java")
+		val subscriberFile = new File("C:\\Users\\selmecziz\\work\\eclipses\\Teqbox\\ws\\Subscriber.java")
 		if (subscriberFile != null && subscriberFile.exists) {
 			subscriberFile.delete
 		}
@@ -103,7 +103,7 @@ class RuleProvider {
 	
 	private def createSubscriber(MqttSetup setup, Sensor sensor) {
 		//val subscriberFile = new File(System.getProperty("user.dir") + "\\resources\\" + sensor.name + "Receiver.java")
-		val subscriberFile = new File("C:\\Eclipses\\Thesis\\ws\\" + sensor.name + "Receiver.java")
+		val subscriberFile = new File("C:\\Users\\selmecziz\\work\\eclipses\\Teqbox\\ws\\" + sensor.name + "Receiver.java")
 		if (subscriberFile != null && subscriberFile.exists) {
 			subscriberFile.delete
 		}
@@ -166,18 +166,11 @@ class RuleProvider {
 		
 			@Override
 			public void messageArrived(String topic, MqttMessage message) throws Exception {
-				System.out.println("-------------------------------------");
-				System.out.println("| Topic:" + topic);
-				System.out.println("| Sensor ID:" + message.getPayload().toString());
-				System.out.println("-------------------------------------");
-				addValueToModel(message.getPayload());
-			}
-			
-			private void addValueToModel(byte[] bytes) {
-				ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+				ByteArrayInputStream bais = new ByteArrayInputStream(message.getPayload());
 				ObjectMapper mapper = new ObjectMapper(factory);
 				Message message = (Message) resource.getContents().get(0);
 				mapper.readValue(bais, Message.class);
+				//TODO!
 			}
 		}
 		'''
@@ -187,7 +180,7 @@ class RuleProvider {
 	
 	private def createPublisher(MqttSetup setup, Sensor sensor) {
 		//val publisherFile = new File(System.getProperty("user.dir") + "\\resources\\" + sensor.name + "Publisher.c")
-		val publisherFile = new File("C:\\Eclipses\\Thesis\\ws\\" + sensor.name + "Publisher.c")
+		val publisherFile = new File("C:\\Users\\selmecziz\\work\\eclipses\\Teqbox\\ws\\" + sensor.name + "Publisher.c")
 		if (publisherFile != null && publisherFile.exists) {
 			publisherFile.delete
 		}
@@ -220,9 +213,11 @@ class RuleProvider {
 			connect(&client, 1);
 			«FOR message:sensor.messages»
 			struct «message.name.toFirstUpper» «message.name»Message;
+			«FOR parameter:message.parameters»
+			«message.name»Message.«parameter.name» = "Hello World!";
 			«ENDFOR»
-			 message = "Hello World!";
-			publishMessage(&client, message);
+			publishMessage(&client, &«message.name»Message);
+			«ENDFOR»
 			disconnect(&client);
 		
 			return 0;
@@ -239,7 +234,7 @@ class RuleProvider {
 		}
 		
 		«FOR message:sensor.messages»
-		void publishMessage(MQTTClient client, struct «message.name.toFirstUpper» payload) {
+		void publishMessage(MQTTClient client, void* payload) {
 			MQTTClient_deliveryToken token;
 			MQTTClient_message message = MQTTClient_message_initializer;
 			message.payload = payload;
