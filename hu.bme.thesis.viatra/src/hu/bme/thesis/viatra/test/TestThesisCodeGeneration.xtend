@@ -22,32 +22,19 @@ public class TestThesisCodeGeneration {
 		// Add MqttSetup to model
 		val setup = modelFactory.createMqttSetup
 		setup.brokerUrl = "tcp://127.0.0.10:9876"
-		setup.qos = 0
-		setup.subscriberId = "SUBSCRIBER"
 		
 		// Add sensor1 to model
 		val sensor1 = modelFactory.createSensor
 		val message1 = modelFactory.createMessage
-		message1.contents += "Message1"
-		sensor1.id = "thermometer"
+		val parameter1 = modelFactory.createMessageParameter
+		message1.parameters.add(parameter1)
+		sensor1.name = "thermometer"
 		sensor1.messages += message1
-		
-		// Add sensor2 to model
-		val sensor2 = modelFactory.createSensor
-		val message2 = modelFactory.createMessage
-		message2.contents += "Message2"
-		val message3 = modelFactory.createMessage
-		message3.contents += "Message3"
-		message2.contents += message3
-		sensor2.id = "switch"
-		sensor2.messages += message2
 		
 		resource.contents += setup
 		resource.contents += sensor1
-		resource.contents += sensor2
 		resource.contents += message1
-		resource.contents += message2
-		resource.contents += message3
+		resource.contents += parameter1
 		
 		val thesisCodeGeneration = new ThesisCodeGeneration
 		

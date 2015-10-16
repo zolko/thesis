@@ -3,7 +3,7 @@
 package hu.bme.thesis.model.impl;
 
 import hu.bme.thesis.model.ModelPackage;
-import hu.bme.thesis.model.MqttSetup;
+import hu.bme.thesis.model.Type;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -14,44 +14,44 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Mqtt Setup</b></em>'.
+ * An implementation of the model object '<em><b>Type</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link hu.bme.thesis.model.impl.MqttSetupImpl#getBrokerUrl <em>Broker Url</em>}</li>
+ *   <li>{@link hu.bme.thesis.model.impl.TypeImpl#getName <em>Name</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class MqttSetupImpl extends MinimalEObjectImpl.Container implements MqttSetup {
+public class TypeImpl extends MinimalEObjectImpl.Container implements Type {
 	/**
-	 * The default value of the '{@link #getBrokerUrl() <em>Broker Url</em>}' attribute.
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getBrokerUrl()
+	 * @see #getName()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String BROKER_URL_EDEFAULT = null;
+	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getBrokerUrl() <em>Broker Url</em>}' attribute.
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getBrokerUrl()
+	 * @see #getName()
 	 * @generated
 	 * @ordered
 	 */
-	protected String brokerUrl = BROKER_URL_EDEFAULT;
+	protected String name = NAME_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected MqttSetupImpl() {
+	protected TypeImpl() {
 		super();
 	}
 
@@ -62,7 +62,7 @@ public class MqttSetupImpl extends MinimalEObjectImpl.Container implements MqttS
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ModelPackage.Literals.MQTT_SETUP;
+		return ModelPackage.Literals.TYPE;
 	}
 
 	/**
@@ -70,8 +70,8 @@ public class MqttSetupImpl extends MinimalEObjectImpl.Container implements MqttS
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getBrokerUrl() {
-		return brokerUrl;
+	public String getName() {
+		return name;
 	}
 
 	/**
@@ -79,11 +79,11 @@ public class MqttSetupImpl extends MinimalEObjectImpl.Container implements MqttS
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setBrokerUrl(String newBrokerUrl) {
-		String oldBrokerUrl = brokerUrl;
-		brokerUrl = newBrokerUrl;
+	public void setName(String newName) {
+		String oldName = name;
+		name = newName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.MQTT_SETUP__BROKER_URL, oldBrokerUrl, brokerUrl));
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.TYPE__NAME, oldName, name));
 	}
 
 	/**
@@ -94,8 +94,8 @@ public class MqttSetupImpl extends MinimalEObjectImpl.Container implements MqttS
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ModelPackage.MQTT_SETUP__BROKER_URL:
-				return getBrokerUrl();
+			case ModelPackage.TYPE__NAME:
+				return getName();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -108,8 +108,8 @@ public class MqttSetupImpl extends MinimalEObjectImpl.Container implements MqttS
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ModelPackage.MQTT_SETUP__BROKER_URL:
-				setBrokerUrl((String)newValue);
+			case ModelPackage.TYPE__NAME:
+				setName((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -123,8 +123,8 @@ public class MqttSetupImpl extends MinimalEObjectImpl.Container implements MqttS
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ModelPackage.MQTT_SETUP__BROKER_URL:
-				setBrokerUrl(BROKER_URL_EDEFAULT);
+			case ModelPackage.TYPE__NAME:
+				setName(NAME_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -138,8 +138,8 @@ public class MqttSetupImpl extends MinimalEObjectImpl.Container implements MqttS
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ModelPackage.MQTT_SETUP__BROKER_URL:
-				return BROKER_URL_EDEFAULT == null ? brokerUrl != null : !BROKER_URL_EDEFAULT.equals(brokerUrl);
+			case ModelPackage.TYPE__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -154,10 +154,10 @@ public class MqttSetupImpl extends MinimalEObjectImpl.Container implements MqttS
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (brokerUrl: ");
-		result.append(brokerUrl);
+		result.append(" (name: ");
+		result.append(name);
 		result.append(')');
 		return result.toString();
 	}
 
-} //MqttSetupImpl
+} //TypeImpl

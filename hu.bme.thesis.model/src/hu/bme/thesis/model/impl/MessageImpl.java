@@ -3,12 +3,14 @@
 package hu.bme.thesis.model.impl;
 
 import hu.bme.thesis.model.Message;
+import hu.bme.thesis.model.MessageParameter;
 import hu.bme.thesis.model.ModelPackage;
 import java.util.Collection;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -18,21 +20,40 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link hu.bme.thesis.model.impl.MessageImpl#getContents <em>Contents</em>}</li>
+ *   <li>{@link hu.bme.thesis.model.impl.MessageImpl#getParameters <em>Parameters</em>}</li>
+ *   <li>{@link hu.bme.thesis.model.impl.MessageImpl#getQos <em>Qos</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class MessageImpl extends MinimalEObjectImpl.Container implements Message {
+public class MessageImpl extends TypeImpl implements Message {
 	/**
-	 * The cached value of the '{@link #getContents() <em>Contents</em>}' attribute list.
+	 * The cached value of the '{@link #getParameters() <em>Parameters</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getContents()
+	 * @see #getParameters()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Object> contents;
+	protected EList<MessageParameter> parameters;
+	/**
+	 * The default value of the '{@link #getQos() <em>Qos</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getQos()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int QOS_EDEFAULT = 0;
+	/**
+	 * The cached value of the '{@link #getQos() <em>Qos</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getQos()
+	 * @generated
+	 * @ordered
+	 */
+	protected int qos = QOS_EDEFAULT;
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -57,11 +78,32 @@ public class MessageImpl extends MinimalEObjectImpl.Container implements Message
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Object> getContents() {
-		if (contents == null) {
-			contents = new EDataTypeUniqueEList<Object>(Object.class, this, ModelPackage.MESSAGE__CONTENTS);
+	public EList<MessageParameter> getParameters() {
+		if (parameters == null) {
+			parameters = new EObjectResolvingEList<MessageParameter>(MessageParameter.class, this, ModelPackage.MESSAGE__PARAMETERS);
 		}
-		return contents;
+		return parameters;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getQos() {
+		return qos;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setQos(int newQos) {
+		int oldQos = qos;
+		qos = newQos;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.MESSAGE__QOS, oldQos, qos));
 	}
 
 	/**
@@ -72,8 +114,10 @@ public class MessageImpl extends MinimalEObjectImpl.Container implements Message
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ModelPackage.MESSAGE__CONTENTS:
-				return getContents();
+			case ModelPackage.MESSAGE__PARAMETERS:
+				return getParameters();
+			case ModelPackage.MESSAGE__QOS:
+				return getQos();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -87,9 +131,12 @@ public class MessageImpl extends MinimalEObjectImpl.Container implements Message
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ModelPackage.MESSAGE__CONTENTS:
-				getContents().clear();
-				getContents().addAll((Collection<? extends Object>)newValue);
+			case ModelPackage.MESSAGE__PARAMETERS:
+				getParameters().clear();
+				getParameters().addAll((Collection<? extends MessageParameter>)newValue);
+				return;
+			case ModelPackage.MESSAGE__QOS:
+				setQos((Integer)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -103,8 +150,11 @@ public class MessageImpl extends MinimalEObjectImpl.Container implements Message
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ModelPackage.MESSAGE__CONTENTS:
-				getContents().clear();
+			case ModelPackage.MESSAGE__PARAMETERS:
+				getParameters().clear();
+				return;
+			case ModelPackage.MESSAGE__QOS:
+				setQos(QOS_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -118,8 +168,10 @@ public class MessageImpl extends MinimalEObjectImpl.Container implements Message
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ModelPackage.MESSAGE__CONTENTS:
-				return contents != null && !contents.isEmpty();
+			case ModelPackage.MESSAGE__PARAMETERS:
+				return parameters != null && !parameters.isEmpty();
+			case ModelPackage.MESSAGE__QOS:
+				return qos != QOS_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -134,8 +186,8 @@ public class MessageImpl extends MinimalEObjectImpl.Container implements Message
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (contents: ");
-		result.append(contents);
+		result.append(" (qos: ");
+		result.append(qos);
 		result.append(')');
 		return result.toString();
 	}

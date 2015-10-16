@@ -2,33 +2,43 @@
  */
 package hu.bme.thesis.model.impl;
 
-import hu.bme.thesis.model.Message;
+import hu.bme.thesis.model.MessageParameter;
 import hu.bme.thesis.model.ModelPackage;
-import hu.bme.thesis.model.Sensor;
+import hu.bme.thesis.model.Type;
 
-import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Sensor</b></em>'.
+ * An implementation of the model object '<em><b>Message Parameter</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link hu.bme.thesis.model.impl.SensorImpl#getName <em>Name</em>}</li>
- *   <li>{@link hu.bme.thesis.model.impl.SensorImpl#getMessages <em>Messages</em>}</li>
+ *   <li>{@link hu.bme.thesis.model.impl.MessageParameterImpl#getType <em>Type</em>}</li>
+ *   <li>{@link hu.bme.thesis.model.impl.MessageParameterImpl#getName <em>Name</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
+public class MessageParameterImpl extends MinimalEObjectImpl.Container implements MessageParameter {
+	/**
+	 * The cached value of the '{@link #getType() <em>Type</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getType()
+	 * @generated
+	 * @ordered
+	 */
+	protected Type type;
+
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -50,21 +60,11 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getMessages() <em>Messages</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getMessages()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Message> messages;
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected SensorImpl() {
+	protected MessageParameterImpl() {
 		super();
 	}
 
@@ -75,7 +75,45 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ModelPackage.Literals.SENSOR;
+		return ModelPackage.Literals.MESSAGE_PARAMETER;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Type getType() {
+		if (type != null && type.eIsProxy()) {
+			InternalEObject oldType = (InternalEObject)type;
+			type = (Type)eResolveProxy(oldType);
+			if (type != oldType) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ModelPackage.MESSAGE_PARAMETER__TYPE, oldType, type));
+			}
+		}
+		return type;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Type basicGetType() {
+		return type;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setType(Type newType) {
+		Type oldType = type;
+		type = newType;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.MESSAGE_PARAMETER__TYPE, oldType, type));
 	}
 
 	/**
@@ -96,19 +134,7 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.SENSOR__NAME, oldName, name));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<Message> getMessages() {
-		if (messages == null) {
-			messages = new EObjectResolvingEList<Message>(Message.class, this, ModelPackage.SENSOR__MESSAGES);
-		}
-		return messages;
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.MESSAGE_PARAMETER__NAME, oldName, name));
 	}
 
 	/**
@@ -119,10 +145,11 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ModelPackage.SENSOR__NAME:
+			case ModelPackage.MESSAGE_PARAMETER__TYPE:
+				if (resolve) return getType();
+				return basicGetType();
+			case ModelPackage.MESSAGE_PARAMETER__NAME:
 				return getName();
-			case ModelPackage.SENSOR__MESSAGES:
-				return getMessages();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -132,16 +159,14 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ModelPackage.SENSOR__NAME:
-				setName((String)newValue);
+			case ModelPackage.MESSAGE_PARAMETER__TYPE:
+				setType((Type)newValue);
 				return;
-			case ModelPackage.SENSOR__MESSAGES:
-				getMessages().clear();
-				getMessages().addAll((Collection<? extends Message>)newValue);
+			case ModelPackage.MESSAGE_PARAMETER__NAME:
+				setName((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -155,11 +180,11 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ModelPackage.SENSOR__NAME:
-				setName(NAME_EDEFAULT);
+			case ModelPackage.MESSAGE_PARAMETER__TYPE:
+				setType((Type)null);
 				return;
-			case ModelPackage.SENSOR__MESSAGES:
-				getMessages().clear();
+			case ModelPackage.MESSAGE_PARAMETER__NAME:
+				setName(NAME_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -173,10 +198,10 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ModelPackage.SENSOR__NAME:
+			case ModelPackage.MESSAGE_PARAMETER__TYPE:
+				return type != null;
+			case ModelPackage.MESSAGE_PARAMETER__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case ModelPackage.SENSOR__MESSAGES:
-				return messages != null && !messages.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -197,4 +222,4 @@ public class SensorImpl extends MinimalEObjectImpl.Container implements Sensor {
 		return result.toString();
 	}
 
-} //SensorImpl
+} //MessageParameterImpl

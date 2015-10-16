@@ -2,12 +2,15 @@
  */
 package hu.bme.thesis.model.impl;
 
+import hu.bme.thesis.model.DataType;
 import hu.bme.thesis.model.Message;
+import hu.bme.thesis.model.MessageParameter;
 import hu.bme.thesis.model.ModelFactory;
 import hu.bme.thesis.model.ModelPackage;
 import hu.bme.thesis.model.MqttSetup;
 import hu.bme.thesis.model.Sensor;
 
+import hu.bme.thesis.model.Type;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
@@ -41,7 +44,28 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass dataTypeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass messageParameterEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass mqttSetupEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass typeEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -118,7 +142,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getSensor_Id() {
+	public EAttribute getSensor_Name() {
 		return (EAttribute)sensorEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -136,15 +160,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getSensor_Setup() {
-		return (EReference)sensorEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getMessage() {
 		return messageEClass;
 	}
@@ -154,8 +169,53 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getMessage_Contents() {
-		return (EAttribute)messageEClass.getEStructuralFeatures().get(0);
+	public EReference getMessage_Parameters() {
+		return (EReference)messageEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMessage_Qos() {
+		return (EAttribute)messageEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getDataType() {
+		return dataTypeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getMessageParameter() {
+		return messageParameterEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getMessageParameter_Type() {
+		return (EReference)messageParameterEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMessageParameter_Name() {
+		return (EAttribute)messageParameterEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -181,8 +241,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getMqttSetup_SubscriberId() {
-		return (EAttribute)mqttSetupEClass.getEStructuralFeatures().get(1);
+	public EClass getType() {
+		return typeEClass;
 	}
 
 	/**
@@ -190,8 +250,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getMqttSetup_Qos() {
-		return (EAttribute)mqttSetupEClass.getEStructuralFeatures().get(2);
+	public EAttribute getType_Name() {
+		return (EAttribute)typeEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -222,18 +282,25 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		isCreated = true;
 
 		// Create classes and their features
-		sensorEClass = createEClass(SENSOR);
-		createEAttribute(sensorEClass, SENSOR__ID);
-		createEReference(sensorEClass, SENSOR__MESSAGES);
-		createEReference(sensorEClass, SENSOR__SETUP);
-
-		messageEClass = createEClass(MESSAGE);
-		createEAttribute(messageEClass, MESSAGE__CONTENTS);
-
 		mqttSetupEClass = createEClass(MQTT_SETUP);
 		createEAttribute(mqttSetupEClass, MQTT_SETUP__BROKER_URL);
-		createEAttribute(mqttSetupEClass, MQTT_SETUP__SUBSCRIBER_ID);
-		createEAttribute(mqttSetupEClass, MQTT_SETUP__QOS);
+
+		typeEClass = createEClass(TYPE);
+		createEAttribute(typeEClass, TYPE__NAME);
+
+		messageEClass = createEClass(MESSAGE);
+		createEReference(messageEClass, MESSAGE__PARAMETERS);
+		createEAttribute(messageEClass, MESSAGE__QOS);
+
+		dataTypeEClass = createEClass(DATA_TYPE);
+
+		messageParameterEClass = createEClass(MESSAGE_PARAMETER);
+		createEReference(messageParameterEClass, MESSAGE_PARAMETER__TYPE);
+		createEAttribute(messageParameterEClass, MESSAGE_PARAMETER__NAME);
+
+		sensorEClass = createEClass(SENSOR);
+		createEAttribute(sensorEClass, SENSOR__NAME);
+		createEReference(sensorEClass, SENSOR__MESSAGES);
 	}
 
 	/**
@@ -264,20 +331,29 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
+		messageEClass.getESuperTypes().add(this.getType());
+		dataTypeEClass.getESuperTypes().add(this.getType());
 
 		// Initialize classes, features, and operations; add parameters
-		initEClass(sensorEClass, Sensor.class, "Sensor", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getSensor_Id(), ecorePackage.getEString(), "id", null, 1, 1, Sensor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSensor_Messages(), this.getMessage(), null, "messages", null, 1, -1, Sensor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSensor_Setup(), this.getMqttSetup(), null, "setup", null, 1, 1, Sensor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(mqttSetupEClass, MqttSetup.class, "MqttSetup", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getMqttSetup_BrokerUrl(), ecorePackage.getEString(), "brokerUrl", null, 0, 1, MqttSetup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(typeEClass, Type.class, "Type", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getType_Name(), ecorePackage.getEString(), "name", null, 0, 1, Type.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(messageEClass, Message.class, "Message", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getMessage_Contents(), ecorePackage.getEJavaObject(), "contents", null, 1, -1, Message.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMessage_Parameters(), this.getMessageParameter(), null, "parameters", null, 0, -1, Message.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMessage_Qos(), ecorePackage.getEInt(), "qos", null, 0, 1, Message.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(mqttSetupEClass, MqttSetup.class, "MqttSetup", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getMqttSetup_BrokerUrl(), ecorePackage.getEString(), "brokerUrl", null, 1, 1, MqttSetup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getMqttSetup_SubscriberId(), ecorePackage.getEString(), "subscriberId", null, 1, 1, MqttSetup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getMqttSetup_Qos(), ecorePackage.getEInt(), "qos", null, 1, 1, MqttSetup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(dataTypeEClass, DataType.class, "DataType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(messageParameterEClass, MessageParameter.class, "MessageParameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getMessageParameter_Type(), this.getType(), null, "type", null, 0, 1, MessageParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMessageParameter_Name(), ecorePackage.getEString(), "name", null, 0, 1, MessageParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(sensorEClass, Sensor.class, "Sensor", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getSensor_Name(), ecorePackage.getEString(), "name", null, 1, 1, Sensor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSensor_Messages(), this.getMessage(), null, "messages", null, 0, -1, Sensor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

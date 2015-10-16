@@ -1,11 +1,11 @@
 package hu.bme.thesis.receiver.mapper
 
 import com.fasterxml.jackson.core.JsonFactory
+import com.fasterxml.jackson.core.JsonToken
+import hu.bme.thesis.receiver.pojos.Sensor
 import java.io.ByteArrayInputStream
 import java.io.File
 import org.apache.commons.io.FileUtils
-import hu.bme.thesis.receiver.Sensor
-import com.fasterxml.jackson.core.JsonToken
 
 class SensorParser {
 
@@ -25,7 +25,7 @@ class SensorParser {
 			val fieldname = parser.currentName
 			parser.nextToken
 			if ("id".equals(fieldname)) {
-				clone_sensor.id = parser.text
+				clone_sensor.name = parser.text
 			}
 		}
 		
@@ -40,7 +40,7 @@ class SensorParser {
 			val fieldname = parser.currentName
 			parser.nextToken
 			if ("id".equals(fieldname)) {
-				sensor.id = parser.text
+				sensor.name = parser.text
 			}
 		}
 		sensor

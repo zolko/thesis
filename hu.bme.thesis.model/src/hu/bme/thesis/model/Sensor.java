@@ -14,9 +14,8 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link hu.bme.thesis.model.Sensor#getId <em>Id</em>}</li>
+ *   <li>{@link hu.bme.thesis.model.Sensor#getName <em>Name</em>}</li>
  *   <li>{@link hu.bme.thesis.model.Sensor#getMessages <em>Messages</em>}</li>
- *   <li>{@link hu.bme.thesis.model.Sensor#getSetup <em>Setup</em>}</li>
  * </ul>
  *
  * @see hu.bme.thesis.model.ModelPackage#getSensor()
@@ -25,33 +24,33 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Sensor extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Id</b></em>' attribute.
+	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Id</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Id</em>' attribute.
-	 * @see #setId(String)
-	 * @see hu.bme.thesis.model.ModelPackage#getSensor_Id()
+	 * @return the value of the '<em>Name</em>' attribute.
+	 * @see #setName(String)
+	 * @see hu.bme.thesis.model.ModelPackage#getSensor_Name()
 	 * @model id="true" required="true"
 	 * @generated
 	 */
-	String getId();
+	String getName();
 
 	/**
-	 * Sets the value of the '{@link hu.bme.thesis.model.Sensor#getId <em>Id</em>}' attribute.
+	 * Sets the value of the '{@link hu.bme.thesis.model.Sensor#getName <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Id</em>' attribute.
-	 * @see #getId()
+	 * @param value the new value of the '<em>Name</em>' attribute.
+	 * @see #getName()
 	 * @generated
 	 */
-	void setId(String value);
+	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Messages</b></em>' containment reference list.
+	 * Returns the value of the '<em><b>Messages</b></em>' reference list.
 	 * The list contents are of type {@link hu.bme.thesis.model.Message}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -59,37 +58,11 @@ public interface Sensor extends EObject {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Messages</em>' containment reference list.
+	 * @return the value of the '<em>Messages</em>' reference list.
 	 * @see hu.bme.thesis.model.ModelPackage#getSensor_Messages()
-	 * @model containment="true" required="true"
+	 * @model
 	 * @generated
 	 */
 	EList<Message> getMessages();
-
-	/**
-	 * Returns the value of the '<em><b>Setup</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Setup</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Setup</em>' reference.
-	 * @see #setSetup(MqttSetup)
-	 * @see hu.bme.thesis.model.ModelPackage#getSensor_Setup()
-	 * @model required="true"
-	 * @generated
-	 */
-	MqttSetup getSetup();
-
-	/**
-	 * Sets the value of the '{@link hu.bme.thesis.model.Sensor#getSetup <em>Setup</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Setup</em>' reference.
-	 * @see #getSetup()
-	 * @generated
-	 */
-	void setSetup(MqttSetup value);
 
 } // Sensor

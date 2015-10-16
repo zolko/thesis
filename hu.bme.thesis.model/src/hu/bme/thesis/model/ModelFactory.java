@@ -40,6 +40,24 @@ public interface ModelFactory extends EFactory {
 	Message createMessage();
 
 	/**
+	 * Returns a new object of class '<em>Data Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Data Type</em>'.
+	 * @generated
+	 */
+	DataType createDataType();
+
+	/**
+	 * Returns a new object of class '<em>Message Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Message Parameter</em>'.
+	 * @generated
+	 */
+	MessageParameter createMessageParameter();
+
+	/**
 	 * Returns a new object of class '<em>Mqtt Setup</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -47,6 +65,15 @@ public interface ModelFactory extends EFactory {
 	 * @generated
 	 */
 	MqttSetup createMqttSetup();
+
+	/**
+	 * Returns a new object of class '<em>Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Type</em>'.
+	 * @generated
+	 */
+	Type createType();
 
 	/**
 	 * Returns the package supported by this factory.

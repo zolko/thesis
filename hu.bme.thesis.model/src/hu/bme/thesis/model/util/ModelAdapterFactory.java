@@ -68,16 +68,28 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	protected ModelSwitch<Adapter> modelSwitch =
 		new ModelSwitch<Adapter>() {
 			@Override
-			public Adapter caseSensor(Sensor object) {
-				return createSensorAdapter();
+			public Adapter caseMqttSetup(MqttSetup object) {
+				return createMqttSetupAdapter();
+			}
+			@Override
+			public Adapter caseType(Type object) {
+				return createTypeAdapter();
 			}
 			@Override
 			public Adapter caseMessage(Message object) {
 				return createMessageAdapter();
 			}
 			@Override
-			public Adapter caseMqttSetup(MqttSetup object) {
-				return createMqttSetupAdapter();
+			public Adapter caseDataType(DataType object) {
+				return createDataTypeAdapter();
+			}
+			@Override
+			public Adapter caseMessageParameter(MessageParameter object) {
+				return createMessageParameterAdapter();
+			}
+			@Override
+			public Adapter caseSensor(Sensor object) {
+				return createSensorAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -128,6 +140,34 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link hu.bme.thesis.model.DataType <em>Data Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see hu.bme.thesis.model.DataType
+	 * @generated
+	 */
+	public Adapter createDataTypeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link hu.bme.thesis.model.MessageParameter <em>Message Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see hu.bme.thesis.model.MessageParameter
+	 * @generated
+	 */
+	public Adapter createMessageParameterAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link hu.bme.thesis.model.MqttSetup <em>Mqtt Setup</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -138,6 +178,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createMqttSetupAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link hu.bme.thesis.model.Type <em>Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see hu.bme.thesis.model.Type
+	 * @generated
+	 */
+	public Adapter createTypeAdapter() {
 		return null;
 	}
 

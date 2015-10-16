@@ -28,7 +28,7 @@ class ThesisRuleProvider {
 	
 	@Accessors(PUBLIC_GETTER)
 	val sensorsRule = createRule.precondition(sensors).action[ match |
-		println('''Sensor id: «match.sensor.id»''')
+		println('''Sensor id: Â«match.sensor.nameÂ»''')
 	].build
 	
 	@Accessors(PUBLIC_GETTER)
@@ -47,7 +47,7 @@ class ThesisRuleProvider {
 	}
 	
 	private def createSubscriber(SensorsWithMqttMatch match) {
-		val subscriberFile = new File(System.getProperty("user.dir") + "\\resources\\" + match.sensor.id + "Receiver.java")
+		val subscriberFile = new File(System.getProperty("user.dir") + "\\resources\\" + match.sensor.name + "Receiver.java")
 		if (subscriberFile != null && subscriberFile.exists) {
 			subscriberFile.delete
 		}
@@ -67,7 +67,7 @@ class ThesisRuleProvider {
 		import org.eclipse.paho.client.mqttv3.MqttMessage;
 		import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 		
-		class «match.sensor.id»Receiver implements MqttCallback {
+		class Â«match.sensor.nameÂ»Receiver implements MqttCallback {
 			
 			private MqttClient client;
 			private MqttConnectOptions connOpts;
@@ -75,7 +75,7 @@ class ThesisRuleProvider {
 			private BsonFactory factory;
 			private Resource resource;
 			
-			public «match.sensor.id»Receiver() {
+			public Â«match.sensor.nameÂ»Receiver() {
 				factory = new BsonFactory();
 				Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 				Map<String,Object> m = reg.getExtensionToFactoryMap();
@@ -84,7 +84,7 @@ class ThesisRuleProvider {
 		        resource = resourceSet.createResource(URI.createURI("model/thesis.model"));
 				
 				persistance = new MemoryPersistence();
-				client = new MqttClient("«match.setup.brokerUrl»", "«match.sensor.id.toUpperCase»_SUBSCRIBER", persistance);
+				client = new MqttClient("Â«match.setup.brokerUrlÂ»", "Â«match.sensor.name.toUpperCaseÂ»_SUBSCRIBER", persistance);
 				connOpts = new MqttConnectOptions();
 				connOpts.setCleanSession(true);
 				client.setCallback(this);
@@ -95,11 +95,11 @@ class ThesisRuleProvider {
 			}
 			
 			public void subscribe() {
-				client.subscribe(«match.sensor.id»);
+				client.subscribe(Â«match.sensor.nameÂ»);
 			}
 			
 			public void unsubscribe() {
-				client.unsubscribe(«match.sensor.id»);
+				client.unsubscribe(Â«match.sensor.nameÂ»);
 			}
 			
 			public void disconnect() {
@@ -144,7 +144,7 @@ class ThesisRuleProvider {
 	}
 	
 	private def createPublisher(SensorsWithMqttMatch match) {
-		val publisherFile = new File(System.getProperty("user.dir") + "\\resources\\" + match.sensor.id + "Publisher.c")
+		val publisherFile = new File(System.getProperty("user.dir") + "\\resources\\" + match.sensor.name + "Publisher.c")
 		if (publisherFile != null && publisherFile.exists) {
 			publisherFile.delete
 		}
@@ -170,7 +170,7 @@ class ThesisRuleProvider {
 		}
 		
 		void init(MQTTClient client) {
-			MQTTClient_create(&client, "«match.setup.brokerUrl»", "«match.sensor.id.toUpperCase»_PUBLISHER", MQTTCLIENT_PERSISTENCE_NONE, NULL);
+			MQTTClient_create(&client, "Â«match.setup.brokerUrlÂ»", "Â«match.sensor.name.toUpperCaseÂ»_PUBLISHER", MQTTCLIENT_PERSISTENCE_NONE, NULL);
 		}
 		
 		void connect(MQTTClient client, int cleansession) {
@@ -184,8 +184,8 @@ class ThesisRuleProvider {
 			MQTTClient_message message = MQTTClient_message_initializer;
 			message.payload = payload;
 			message.payloadlen = sizeof(payload);
-			message.qos = «match.setup.qos»;
-			MQTTClient_publishMessage(client, "«match.sensor.id»", &message, &token);
+			message.qos = Â«match.sensor.messages.get(0).qosÂ»;
+			MQTTClient_publishMessage(client, "Â«match.sensor.nameÂ»", &message, &token);
 		}
 		
 		void disconnect(MQTTClient client) {

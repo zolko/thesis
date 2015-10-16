@@ -56,9 +56,12 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case ModelPackage.SENSOR: return createSensor();
-			case ModelPackage.MESSAGE: return createMessage();
 			case ModelPackage.MQTT_SETUP: return createMqttSetup();
+			case ModelPackage.TYPE: return createType();
+			case ModelPackage.MESSAGE: return createMessage();
+			case ModelPackage.DATA_TYPE: return createDataType();
+			case ModelPackage.MESSAGE_PARAMETER: return createMessageParameter();
+			case ModelPackage.SENSOR: return createSensor();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -89,9 +92,39 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public DataType createDataType() {
+		DataTypeImpl dataType = new DataTypeImpl();
+		return dataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MessageParameter createMessageParameter() {
+		MessageParameterImpl messageParameter = new MessageParameterImpl();
+		return messageParameter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public MqttSetup createMqttSetup() {
 		MqttSetupImpl mqttSetup = new MqttSetupImpl();
 		return mqttSetup;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Type createType() {
+		TypeImpl type = new TypeImpl();
+		return type;
 	}
 
 	/**

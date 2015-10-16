@@ -66,21 +66,41 @@ public class ModelSwitch<T> extends Switch<T> {
 	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-			case ModelPackage.SENSOR: {
-				Sensor sensor = (Sensor)theEObject;
-				T result = caseSensor(sensor);
+			case ModelPackage.MQTT_SETUP: {
+				MqttSetup mqttSetup = (MqttSetup)theEObject;
+				T result = caseMqttSetup(mqttSetup);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.TYPE: {
+				Type type = (Type)theEObject;
+				T result = caseType(type);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case ModelPackage.MESSAGE: {
 				Message message = (Message)theEObject;
 				T result = caseMessage(message);
+				if (result == null) result = caseType(message);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ModelPackage.MQTT_SETUP: {
-				MqttSetup mqttSetup = (MqttSetup)theEObject;
-				T result = caseMqttSetup(mqttSetup);
+			case ModelPackage.DATA_TYPE: {
+				DataType dataType = (DataType)theEObject;
+				T result = caseDataType(dataType);
+				if (result == null) result = caseType(dataType);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.MESSAGE_PARAMETER: {
+				MessageParameter messageParameter = (MessageParameter)theEObject;
+				T result = caseMessageParameter(messageParameter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.SENSOR: {
+				Sensor sensor = (Sensor)theEObject;
+				T result = caseSensor(sensor);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -119,6 +139,36 @@ public class ModelSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Data Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Data Type</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDataType(DataType object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Message Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Message Parameter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMessageParameter(MessageParameter object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Mqtt Setup</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -130,6 +180,21 @@ public class ModelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseMqttSetup(MqttSetup object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Type</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseType(Type object) {
 		return null;
 	}
 

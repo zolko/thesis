@@ -1,8 +1,11 @@
 package hu.bme.thesis.receiver.mapper
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import de.undercouch.bson4jackson.BsonFactory
+import hu.bme.thesis.model.Message
 import hu.bme.thesis.model.ModelFactory
-import hu.bme.thesis.receiver.Sensor
+import hu.bme.thesis.receiver.pojos.Sensor
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -10,7 +13,6 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
-import com.fasterxml.jackson.core.JsonToken
 
 class SensorMapper {
 
@@ -42,29 +44,19 @@ class SensorMapper {
 		val generator = factory.createJsonGenerator(baos)
 		generator.writeStartObject
 		generator.writeFieldName("id")
-		generator.writeString(sensor.id)
+		generator.writeString(sensor.name)
 		generator.close
 
 		baos.writeTo(outputStream)
 	}
 	
-	def writeValueToModel(Sensor sensor) {
-		val modelSensor = resource.contents.get(0) as hu.bme.thesis.model.Sensor
-		modelSensor.id = sensor.id
-		val message = ModelFactory.eINSTANCE.createMessage
-		message.contents.add("Content")
-		modelSensor.messages.add(message)
-	}
-	
 	def addValueToModel(byte[] bytes) {
-		val parser = factory.createParser(bytes)
-		val sensor = ModelFactory.eINSTANCE.createSensor
-		parser.nextToken
-		while (parser.nextToken != JsonToken.END_OBJECT) {
-			val fieldname = parser.currentName
-			parser.nextToken
-			if (fieldname.equals("id")) {
-				sensor.id = parser.text
+		val bais = new ByteArrayInputStream(bytes)
+		val mapper = new ObjectMapper(factory)
+		val contents = resource.contents
+		for (content : contents) {
+			if (content instanceof hu.bme.thesis.model.Sensor) {
+				content.messages.add(mapper.readValue(bais, Message))
 			}
 		}
 	}
