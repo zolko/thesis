@@ -38,7 +38,7 @@ class CodeGeneration {
 	def fire() {
 		fireAllCurrent(ruleProvider.sensorsRule)
 		fireAllCurrent(ruleProvider.modelRule)
-		ruleProvider.generateGeneralSubscriber
+		JavaGenerator.generateGeneralSubscriber
 	}
 	
 	def dispose() {
