@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/hu.bme.thesis.dsl.rules/src-gen" editDirectory="/hu.bme.thesis.dsl.rules.edit/src"
+    editorDirectory="/hu.bme.thesis.dsl.rules.editor/src" modelPluginID="hu.bme.thesis.dsl.rules"
+    forceOverwrite="true" modelName="RuleDsl" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    complianceLevel="6.0" copyrightFields="false" editPluginID="hu.bme.thesis.dsl.rules.edit"
+    editorPluginID="hu.bme.thesis.dsl.rules.editor" runtimeVersion="2.11" usedGenPackages="platform:/resource/hu.bme.thesis.dsl.sensors/model/generated/SensorsDsl.genmodel#//sensorsDsl">
+  <genPackages prefix="RuleDsl" basePackage="hu.bme.thesis.dsl.rules" disposableProviderFactory="true"
+      fileExtensions="rule" ecorePackage="RuleDsl.ecore#/">
+    <genClasses ecoreClass="RuleDsl.ecore#//DomainModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RuleDsl.ecore#//DomainModel/defined"/>
+    </genClasses>
+    <genClasses ecoreClass="RuleDsl.ecore#//Rule">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RuleDsl.ecore#//Rule/sensor"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RuleDsl.ecore#//Rule/message"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RuleDsl.ecore#//Rule/param"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

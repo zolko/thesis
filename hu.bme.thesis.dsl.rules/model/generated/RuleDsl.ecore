@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ruleDsl" nsURI="http://www.bme.hu/thesis/dsl/rules/RuleDsl"
+    nsPrefix="ruleDsl">
+  <eClassifiers xsi:type="ecore:EClass" name="DomainModel">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="defined" eType="#//Rule"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Rule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sensor" eType="ecore:EClass platform:/resource/hu.bme.thesis.dsl.sensors/model/generated/SensorsDsl.ecore#//Sensor"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="message" eType="ecore:EClass platform:/resource/hu.bme.thesis.dsl.sensors/model/generated/SensorsDsl.ecore#//Message"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="param" eType="ecore:EClass platform:/resource/hu.bme.thesis.dsl.sensors/model/generated/SensorsDsl.ecore#//MessageParameter"/>
+  </eClassifiers>
+</ecore:EPackage>

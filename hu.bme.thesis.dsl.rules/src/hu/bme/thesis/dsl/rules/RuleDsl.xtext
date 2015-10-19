@@ -1,0 +1,19 @@
+grammar hu.bme.thesis.dsl.rules.RuleDsl with org.eclipse.xtext.common.Terminals
+
+generate ruleDsl "http://www.bme.hu/thesis/dsl/rules/RuleDsl"
+
+import "http://www.bme.hu/thesis/dsl/sensors/SensorsDsl" as sensors
+
+DomainModel:
+	defined = Rule
+;
+
+Rule:
+	"rule" "{"
+		sensor = [sensors::Sensor] "." message = [sensors::Message] "." param = [sensors::MessageParameter] Operation INT
+	"}"
+;
+
+Operation:
+	("<" | ">" | "==" | "!=")
+;
