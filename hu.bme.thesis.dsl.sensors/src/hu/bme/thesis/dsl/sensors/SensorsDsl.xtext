@@ -2,6 +2,8 @@ grammar hu.bme.thesis.dsl.sensors.SensorsDsl with org.eclipse.xtext.common.Termi
 
 generate sensorsDsl "http://www.bme.hu/thesis/dsl/sensors/SensorsDsl"
 
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
 Model:
 	(
 		mqttSetup = MqttSetup
@@ -35,7 +37,7 @@ DataType:
 QualifiedName: ID ('.' ID)*;
 
 MessageParameter:
-	"parameter" type = [Type] name = ID
+	"parameter" type = [Type] name = ID ( "=" value = [Type])?
 ;
 
 Sensor:

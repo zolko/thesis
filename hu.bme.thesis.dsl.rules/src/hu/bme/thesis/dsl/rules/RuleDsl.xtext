@@ -10,10 +10,10 @@ DomainModel:
 
 Rule:
 	"rule" "{"
-		sensor = [sensors::Sensor] "." message = [sensors::Message] "." param = [sensors::MessageParameter] Operation INT
+		sensor = [sensors::Sensor] "."
+		message = [sensors::Message] "."
+		param = [sensors::MessageParameter]
+		op = ("<" | ">" | "==" | "!=")
+		value=[sensors::Type]
 	"}"
-;
-
-Operation:
-	("<" | ">" | "==" | "!=")
 ;
