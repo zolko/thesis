@@ -1,0 +1,47 @@
+grammar hu.bme.thesis.dsl.sensors.SensorsDsl with org.eclipse.xtext.common.Terminals
+
+generate sensorsDsl "http://www.bme.hu/thesis/dsl/sensors/SensorsDsl"
+
+Model:
+	(
+		mqttSetup = MqttSetup
+		(types += Type)*
+		(sensors += Sensor)*
+	)
+;
+
+MqttSetup:
+	"mqttSetup" "{"
+		"brokerUrl" brokerUrl = STRING
+	"}" 
+;
+
+Type:
+	DataType | Message
+;
+
+Message:
+	"message" "{"
+		"name" name = ID
+		(parameters += MessageParameter)*
+		("qos" qos = INT)?
+	"}"
+;
+
+DataType:
+	"dataType" name = ID
+;
+
+QualifiedName: ID ('.' ID)*;
+
+MessageParameter:
+	"parameter" type = [Type] name = ID
+;
+
+Sensor:
+	"sensor" "{"
+		"name" name = ID
+		"messages" messages += [Message]
+		("," messages += [Message])*
+	"}"
+;
