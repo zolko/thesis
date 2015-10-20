@@ -11,29 +11,31 @@ import org.eclipse.xtend.lib.annotations.Accessors
 class RuleProvider {
 	
 	static extension val Patterns codeGenQueries = Patterns.instance
-	
 	extension val BatchTransformationRuleFactory factory = new BatchTransformationRuleFactory
-	
-	IncQueryEngine engine
-	
 	extension BatchTransformationStatements statements
 	
-	new(IncQueryEngine engine, BatchTransformationStatements statements) {
+	IncQueryEngine engine
+	String rootPath
+	
+	new(IncQueryEngine engine, BatchTransformationStatements statements, String rootPath) {
 		this.engine = engine
 		this.statements = statements
+		this.rootPath = rootPath
+		JavaGenerator.generateGeneralSubscriber(rootPath)
+		CGenerator.generateProjectFile(rootPath)
+		CGenerator.generateCProjectFile(rootPath)
 	}
 	
 	@Accessors(PUBLIC_GETTER)
 	val sensorsRule = createRule.precondition(sensors).action[ match |
-		println('''Sensor id: �match.sensor.name�''')
+		println('''Sensor id: «match.sensor.name»''')
 	].build
 	
 	@Accessors(PUBLIC_GETTER)
 	val modelRule = createRule.precondition(model).action[ match |
 		for (sensor : match.model.sensors) {
-			CGenerator.generateCFiles(match.model.mqttSetup, sensor, "")
-			JavaGenerator.generateJavaFiles(match.model.mqttSetup, sensor, "")
-			//createSubscriber(match.model.mqttSetup, sensor)
+			CGenerator.generateCFiles(match.model.mqttSetup, sensor, rootPath)
+			JavaGenerator.generateJavaFiles(match.model.mqttSetup, sensor, rootPath)
 		}
 	].build
 	

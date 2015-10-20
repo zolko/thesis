@@ -9,17 +9,14 @@ import org.eclipse.viatra.emf.runtime.transformation.batch.BatchTransformation
 class CodeGeneration {
 	
 	extension Patterns thesisQueries = Patterns.instance
-	
-	private var initialized = false
-	
 	extension BatchTransformationStatements statements
+	private var initialized = false
 	
 	BatchTransformation transform
 	IncQueryEngine engine
-	
 	RuleProvider ruleProvider
 	
-	def initialize(IncQueryEngine engine) {
+	def initialize(IncQueryEngine engine, String rootPath) {
 		if (!initialized) {
 			this.engine = engine
 			
@@ -28,7 +25,7 @@ class CodeGeneration {
 			
 			transform = BatchTransformation.forEngine(engine)
 			statements = new BatchTransformationStatements(transform)
-			ruleProvider = new RuleProvider(engine, statements)
+			ruleProvider = new RuleProvider(engine, statements, rootPath)
 			ruleProvider.addRules(transform)
 			
 			initialized = true
@@ -38,7 +35,6 @@ class CodeGeneration {
 	def fire() {
 		fireAllCurrent(ruleProvider.sensorsRule)
 		fireAllCurrent(ruleProvider.modelRule)
-		JavaGenerator.generateGeneralSubscriber
 	}
 	
 	def dispose() {

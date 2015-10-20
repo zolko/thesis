@@ -8,11 +8,28 @@ import java.io.FileWriter
 class JavaGenerator {
 	
 	public static def generateJavaFiles(MqttSetup setup, Sensor sensor, String path) {
-		createSubscribers(setup, sensor, path)
+		val rootFolder = createFolder(path)
+		val projectFolder = createFolder(new File(rootFolder, "hu.bme.thesis.generated.c").absolutePath)
+		val srcFolder = createFolder(new File(projectFolder, "src").absolutePath)
+		createSubscribers(setup, sensor, srcFolder)
 	}
 	
-	public static def generateGeneralSubscriber() {
-		val subscriberFile = new File(System.getProperty("user.dir") + "\\generated\\Subscriber.java")
+	private static def createFolder(String path) {
+		val file = new File(path)
+		if (file != null && file.parentFile.exists) {
+			if (!file.exists) {
+				file.mkdir
+			}
+			return file
+		}
+		return null
+	}
+	
+	public static def generateGeneralSubscriber(String path) {
+		val rootFolder = createFolder(path)
+		val projectFolder = createFolder(new File(rootFolder, "hu.bme.thesis.generated.java").absolutePath)
+		val srcFolder = createFolder(new File(projectFolder, "src").absolutePath)
+		val subscriberFile = new File(srcFolder, "Subscriber.java")
 		if (subscriberFile != null && subscriberFile.exists) {
 			subscriberFile.delete
 		}
@@ -49,7 +66,7 @@ class JavaGenerator {
 				client.subscribe(topic);
 			}
 			
-			public void unsubscribe(String) {
+			public void unsubscribe(String topic) {
 				client.unsubscribe(topic);
 			}
 			
@@ -63,9 +80,8 @@ class JavaGenerator {
 		writer.close
 	}
 	
-	private static def createSubscribers(MqttSetup setup, Sensor sensor, String path) {
-		//val subscriberFile = new File(System.getProperty("user.dir") + "\\resources\\" + sensor.name + "Receiver.java")
-		val subscriberFile = new File(System.getProperty("user.dir") + "\\generated\\" + sensor.name.toFirstUpper + "Receiver.java")
+	private static def createSubscribers(MqttSetup setup, Sensor sensor, File srcFolder) {
+		val subscriberFile = new File(srcFolder, sensor.name.toFirstUpper + "Receiver.java")
 		if (subscriberFile != null && subscriberFile.exists) {
 			subscriberFile.delete
 		}
@@ -82,13 +98,13 @@ class JavaGenerator {
 		import org.eclipse.paho.client.mqttv3.MqttCallback;
 		import org.eclipse.paho.client.mqttv3.MqttMessage;
 		
-		class �sensor.name�Receiver implements MqttCallback {
+		class «sensor.name»Receiver implements MqttCallback {
 			
 			private Subscriber subscriber;
 			private BsonFactory factory;
 			private Resource resource;
 			
-			public �sensor.name�Receiver() {
+			public «sensor.name»Receiver() {
 				factory = new BsonFactory();
 				Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 				Map<String,Object> m = reg.getExtensionToFactoryMap();
@@ -96,7 +112,7 @@ class JavaGenerator {
 		        ResourceSet resourceSet = new ResourceSetImpl();
 		        resource = resourceSet.createResource(URI.createURI("model/thesis.model"));
 				
-				subscriber = new Subscriber("�setup.brokerUrl�", "�sensor.name.toUpperCase�_SUBSCRIBER");
+				subscriber = new Subscriber("«setup.brokerUrl»", "«sensor.name.toUpperCase»_SUBSCRIBER");
 				subscriber.setCallback(this);
 			}
 			
@@ -105,11 +121,11 @@ class JavaGenerator {
 			}
 			
 			public void subscribe() {
-				subscriber.subscribe(�sensor.name�);
+				subscriber.subscribe(«sensor.name»);
 			}
 			
 			public void unsubscribe() {
-				subscriber.unsubscribe(�sensor.name�);
+				subscriber.unsubscribe(«sensor.name»);
 			}
 			
 			public void disconnect() {
