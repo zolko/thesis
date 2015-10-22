@@ -9,7 +9,7 @@ class JavaGenerator {
 	
 	public static def generateJavaFiles(MqttSetup setup, Sensor sensor, String path) {
 		val rootFolder = createFolder(path)
-		val projectFolder = createFolder(new File(rootFolder, "hu.bme.thesis.generated.c").absolutePath)
+		val projectFolder = createFolder(new File(rootFolder, "hu.bme.thesis.generated.java").absolutePath)
 		val srcFolder = createFolder(new File(projectFolder, "src").absolutePath)
 		createSubscribers(setup, sensor, srcFolder)
 	}
@@ -25,15 +25,22 @@ class JavaGenerator {
 		return null
 	}
 	
+	private static def createFile(File folder, String name) {
+		val file = new File(folder, name)
+		if (file != null) {
+			if (file.exists) {
+				file.delete
+			}
+			file.createNewFile
+		}
+		return file
+	}
+	
 	public static def generateGeneralSubscriber(String path) {
 		val rootFolder = createFolder(path)
 		val projectFolder = createFolder(new File(rootFolder, "hu.bme.thesis.generated.java").absolutePath)
 		val srcFolder = createFolder(new File(projectFolder, "src").absolutePath)
-		val subscriberFile = new File(srcFolder, "Subscriber.java")
-		if (subscriberFile != null && subscriberFile.exists) {
-			subscriberFile.delete
-		}
-		subscriberFile.createNewFile
+		val subscriberFile = createFile(srcFolder, "Subscriber.java")
 		val writer = new FileWriter(subscriberFile)
 		val fileContent = '''
 		import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -81,11 +88,7 @@ class JavaGenerator {
 	}
 	
 	private static def createSubscribers(MqttSetup setup, Sensor sensor, File srcFolder) {
-		val subscriberFile = new File(srcFolder, sensor.name.toFirstUpper + "Receiver.java")
-		if (subscriberFile != null && subscriberFile.exists) {
-			subscriberFile.delete
-		}
-		subscriberFile.createNewFile
+		val subscriberFile = createFile(srcFolder, sensor.name.toFirstUpper + "Receiver.java")
 		val writer = new FileWriter(subscriberFile)
 		val fileContent = '''
 		import de.undercouch.bson4jackson.BsonFactory;

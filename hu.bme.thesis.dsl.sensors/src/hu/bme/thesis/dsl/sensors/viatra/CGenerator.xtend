@@ -29,14 +29,21 @@ class CGenerator {
 		return null
 	}
 	
+	private static def createFile(File folder, String name) {
+		val file = new File(folder, name)
+		if (file != null) {
+			if (file.exists) {
+				file.delete
+			}
+			file.createNewFile
+		}
+		return file
+	}
+	
 	public static def generateCProjectFile(String path) {
 		val rootFolder = createFolder(path)
 		val projectFolder = createFolder(new File(rootFolder, "hu.bme.thesis.generated.c").absolutePath)
-		val cprojectFile = new File(projectFolder, ".cproject")
-		if (cprojectFile != null && cprojectFile.exists) {
-			cprojectFile.delete
-		}
-		cprojectFile.createNewFile
+		val cprojectFile = createFile(projectFolder, ".cproject")
 		val writer = new FileWriter(cprojectFile)
 		val fileContent = '''
 		TODO!!
@@ -48,11 +55,7 @@ class CGenerator {
 	public static def generateProjectFile(String path) {
 		val rootFolder = createFolder(path)
 		val projectFolder = createFolder(new File(rootFolder, "hu.bme.thesis.generated.c").absolutePath)
-		val projectFile = new File(projectFolder, ".project")
-		if (projectFile != null && projectFile.exists) {
-			projectFile.delete
-		}
-		projectFile.createNewFile
+		val projectFile = createFile(projectFolder, ".project")
 		val writer = new FileWriter(projectFile)
 		val fileContent = '''
 		<?xml version="1.0" encoding="UTF-8"?>
@@ -87,11 +90,7 @@ class CGenerator {
 	}
 	
 	private static def createSubscriberHeaders(Sensor sensor, File srcFolder) {
-		val subscriberFile = new File(srcFolder, sensor.name.toFirstUpper + "Subscriber.h")
-		if (subscriberFile != null && subscriberFile.exists) {
-			subscriberFile.delete
-		}
-		subscriberFile.createNewFile
+		val subscriberFile = createFile(srcFolder, sensor.name.toFirstUpper + "Subscriber.h")
 		val writer = new FileWriter(subscriberFile)
 		val fileContent = '''
 		#ifndef «sensor.name.toUpperCase»SUBSCRIBER_H_
@@ -109,7 +108,7 @@ class CGenerator {
 		void «sensor.name»SubscriberDisconnect(MQTTClient client);
 		void «sensor.name»ConnLost(void *context, char *cause);
 		void «sensor.name»Delivered(void *context, MQTTClient_deliveryToken dt);
-		void «sensor.name»MessageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message);
+		int «sensor.name»MessageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message);
 		
 		#endif /* «sensor.name.toUpperCase»SUBSCRIBER_H_ */
 		'''
@@ -118,11 +117,7 @@ class CGenerator {
 	}
 	
 	private static def createSubscriberSources(MqttSetup setup, Sensor sensor, File srcFolder) {
-		val publisherFile = new File(srcFolder, sensor.name.toFirstUpper + "Subscriber.c")
-		if (publisherFile != null && publisherFile.exists) {
-			publisherFile.delete
-		}
-		publisherFile.createNewFile
+		val publisherFile = createFile(srcFolder, sensor.name.toFirstUpper + "Subscriber.c")
 		val writer = new FileWriter(publisherFile)
 		val fileContent = '''
 		#include "«sensor.name»Subscriber.h"
@@ -162,7 +157,7 @@ class CGenerator {
 			deliveredtoken = dt;
 		}
 		
-		void «sensor.name»MessageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message) {
+		int «sensor.name»MessageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message) {
 			int i;
 		    char* payloadptr;
 		
@@ -186,11 +181,7 @@ class CGenerator {
 	}
 	
 	private static def createPublisherHeaders(Sensor sensor, File srcFolder) {
-		val publisherFile = new File(srcFolder, sensor.name.toFirstUpper + "Publisher.h")
-		if (publisherFile != null && publisherFile.exists) {
-			publisherFile.delete
-		}
-		publisherFile.createNewFile
+		val publisherFile = createFile(srcFolder, sensor.name.toFirstUpper + "Publisher.h")
 		val writer = new FileWriter(publisherFile)
 		val fileContent = '''
 		#ifndef «sensor.name.toUpperCase»PUBLISHER_H_
@@ -205,6 +196,8 @@ class CGenerator {
 		void «sensor.name»PublisherConnect(MQTTClient client, int cleansession);
 		void «sensor.name»PublisherPublishMessage(MQTTClient client, void* payload, int qos);
 		void «sensor.name»PublisherDisconnect(MQTTClient client);
+		
+		#endif /* «sensor.name.toUpperCase»PUBLISHER_H_ */
 		'''
 		writer.write(fileContent)
 		writer.close
@@ -249,11 +242,7 @@ class CGenerator {
 	}
 	
 	private static def createMain(Sensor sensor, File srcFolder) {
-		val mainFile = new File(srcFolder, sensor.name.toFirstUpper + "Main.c")
-		if (mainFile != null && mainFile.exists) {
-			mainFile.delete
-		}
-		mainFile.createNewFile
+		val mainFile = createFile(srcFolder, sensor.name.toFirstUpper + "Main.c")
 		val writer = new FileWriter(mainFile)
 		val fileContent = '''
 		#include "«sensor.name»Publisher.h"
