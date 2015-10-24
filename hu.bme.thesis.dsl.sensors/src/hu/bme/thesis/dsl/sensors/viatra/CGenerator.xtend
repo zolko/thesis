@@ -101,14 +101,17 @@ class CGenerator {
 		#include "string.h"
 		#include "MQTTClient.h"
 		
-		void «sensor.name»SubscriberInit(MQTTClient client);
+		int «sensor.name»SubscriberInit();
 		void «sensor.name»SubscriberConnect(MQTTClient client, int cleansession);
 		void «sensor.name»SubscriberSubscribe(MQTTClient client, int qos);
 		void «sensor.name»SubscriberUnsubscribe(MQTTClient client);
 		void «sensor.name»SubscriberDisconnect(MQTTClient client);
-		void «sensor.name»ConnLost(void *context, char *cause);
-		void «sensor.name»Delivered(void *context, MQTTClient_deliveryToken dt);
-		int «sensor.name»MessageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message);
+		void «sensor.name»SubscriberDestroy(MQTTClient client);
+		«FOR message:sensor.messages»
+		void «message.name»ConnLost(void *context, char *cause);
+		void «message.name»Delivered(void *context, MQTTClient_deliveryToken dt);
+		int «message.name»MessageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message);
+		«ENDFOR»
 		
 		#endif /* «sensor.name.toUpperCase»SUBSCRIBER_H_ */
 		'''
@@ -124,13 +127,30 @@ class CGenerator {
 		
 		volatile MQTTClient_deliveryToken deliveredtoken;
 		
-		void «sensor.name»SubscriberInit(MQTTClient client) {
-			MQTTClient_create(&client, "«setup.brokerUrl»", "«sensor.name.toUpperCase»_PUBLISHER", MQTTCLIENT_PERSISTENCE_NONE, NULL);
+		«FOR message:sensor.messages»
+		struct «message.name.toFirstUpper» {
+			«FOR parameter:message.parameters»
+			«IF parameter.type.name == "boolean"»
+			int «parameter.name»;
+			«ELSE»
+			«parameter.type.name» «parameter.name»;
+			«ENDIF»
+			«ENDFOR»
+		};
+		«ENDFOR»
+		
+		int «sensor.name»SubscriberInit() {
+			MQTTClient client;
+			MQTTClient_create(&client, "«setup.brokerUrl»", "«sensor.name.toUpperCase»_SUBSCRIBER", MQTTCLIENT_PERSISTENCE_NONE, NULL);
+			return client;
 		}
 		
 		void «sensor.name»SubscriberConnect(MQTTClient client, int cleansession) {
 			MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
 			conn_opts.cleansession = cleansession;
+			«FOR message:sensor.messages»
+			MQTTClient_setCallbacks(client, NULL, «message.name»ConnLost, «message.name»MessageArrived, «message.name»Delivered);
+			«ENDFOR»
 			MQTTClient_connect(client, &conn_opts);
 		}
 		
@@ -144,37 +164,42 @@ class CGenerator {
 		
 		void «sensor.name»SubscriberDisconnect(MQTTClient client) {
 			MQTTClient_disconnect(client, 1000L);
-			MQTTClient_destroy(&client);
 		}
 		
-		void «sensor.name»ConnLost(void *context, char *cause) {
+		void «sensor.name»SubscriberDestroy(MQTTClient client) {
+			MQTTClient_destroy(&client);
+		}
+		«FOR message:sensor.messages»
+		
+		void «message.name»ConnLost(void *context, char *cause) {
 			printf("\nConnection lost\n");
 			printf("     cause: %s\n", cause);
 		}
 		
-		void «sensor.name»Delivered(void *context, MQTTClient_deliveryToken dt) {
+		void «message.name»Delivered(void *context, MQTTClient_deliveryToken dt) {
 			printf("Message with token value %d delivery confirmed\n", dt);
 			deliveredtoken = dt;
 		}
 		
-		int «sensor.name»MessageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message) {
-			int i;
-		    char* payloadptr;
+		int «message.name»MessageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message) {
+			struct «message.name.toFirstUpper»* payload;
+			payload = (struct «message.name.toFirstUpper»*)message->payload;
 		
-		    printf("Message arrived\n");
-		    printf("     topic: %s\n", topicName);
-		    printf("   message: ");
+			printf("Message arrived\n");
+			printf("     topic: %s\n", topicName);
+			«FOR parameter:message.parameters»
+			«IF parameter.type == "boolean" || parameter.type == "int"»
+			printf("   message: %d\n", payload->«parameter.name»);
+			«ELSEIF parameter.type == "String"»
+			printf("   message: %s\n", payload->«parameter.name»);
+			«ENDIF»
+			«ENDFOR»
+			MQTTClient_freeMessage(&message);
+			MQTTClient_free(topicName);
 		
-		    payloadptr = message->payload;
-		    for(i=0; i<message->payloadlen; i++)
-		    {
-		        putchar(*payloadptr++);
-		    }
-		    putchar('\n');
-		    MQTTClient_freeMessage(&message);
-		    MQTTClient_free(topicName);
-		    return 1;
+			return 1;
 		}
+		«ENDFOR»
 		'''
 		writer.write(fileContent)
 		writer.close
@@ -192,10 +217,11 @@ class CGenerator {
 		#include "string.h"
 		#include "MQTTClient.h"
 		
-		void «sensor.name»PublisherInit(MQTTClient client);
+		MQTTClient «sensor.name»PublisherInit();
 		void «sensor.name»PublisherConnect(MQTTClient client, int cleansession);
 		void «sensor.name»PublisherPublishMessage(MQTTClient client, void* payload, int qos);
 		void «sensor.name»PublisherDisconnect(MQTTClient client);
+		void «sensor.name»PublisherDestroy(MQTTClient client);
 		
 		#endif /* «sensor.name.toUpperCase»PUBLISHER_H_ */
 		'''
@@ -213,8 +239,10 @@ class CGenerator {
 		val fileContent = '''
 		#include "«sensor.name»Publisher.h"
 		
-		void «sensor.name»PublisherInit(MQTTClient client) {
+		MQTTClient «sensor.name»PublisherInit() {
+			MQTTClient client;
 			MQTTClient_create(&client, "«setup.brokerUrl»", "«sensor.name.toUpperCase»_PUBLISHER", MQTTCLIENT_PERSISTENCE_NONE, NULL);
+			return client;
 		}
 		
 		void «sensor.name»PublisherConnect(MQTTClient client, int cleansession) {
@@ -227,13 +255,18 @@ class CGenerator {
 			MQTTClient_deliveryToken token;
 			MQTTClient_message message = MQTTClient_message_initializer;
 			message.payload = payload;
-			message.payloadlen = sizeof(payload);
+			message.payloadlen = sizeof(payload) + 1;
 			message.qos = qos;
+			message.retain = 0;
 			MQTTClient_publishMessage(client, "«sensor.name»", &message, &token);
+			MQTTClient_waitForCompletion(client, token, 10000L);
 		}
 		
 		void «sensor.name»PublisherDisconnect(MQTTClient client) {
 			MQTTClient_disconnect(client, 1000L);
+		}
+		
+		void «sensor.name»PublisherDestroy(MQTTClient client) {
 			MQTTClient_destroy(&client);
 		}
 		'''
@@ -262,16 +295,17 @@ class CGenerator {
 		«ENDFOR»
 		int main(int argc, char* argv[])
 		{
-		    MQTTClient client;
+			MQTTClient publisherClient;
+		    MQTTClient subscriberClient;
 
-			«sensor.name»SubscriberInit(&client);
-			«sensor.name»SubscriberConnect(&client, 1);
-			«sensor.name»SubscriberSubscribe(&client, 0);
+			subscriberClient = «sensor.name»SubscriberInit();
+			«sensor.name»SubscriberConnect(subscriberClient, 1);
+			«sensor.name»SubscriberSubscribe(subscriberClient, 1);
 
-			«sensor.name»PublisherInit(&client);
-			«sensor.name»PublisherConnect(&client, 1);
-			
+			publisherClient = «sensor.name»PublisherInit();
+			«sensor.name»PublisherConnect(publisherClient, 1);
 			«FOR message:sensor.messages»
+			
 			struct «message.name.toFirstUpper» «message.name»;
 			«FOR parameter:message.parameters»
 			«IF parameter.type.name == "int"»
@@ -285,12 +319,15 @@ class CGenerator {
 			«ENDIF»
 			«ENDFOR»
 			
-			«sensor.name»PublisherPublishMessage(&client, &«message.name», «message.qos»);
+			«sensor.name»PublisherPublishMessage(publisherClient, &«message.name», «message.qos»);
 			«ENDFOR»
-			«sensor.name»PublisherDisconnect(&client);
+			
+			«sensor.name»PublisherDisconnect(publisherClient);
+			«sensor.name»PublisherDestroy(publisherClient);
 
-			«sensor.name»SubscriberUnsubscribe(&client);
-			«sensor.name»SubscriberDisconnect(&client);
+			«sensor.name»SubscriberUnsubscribe(subscriberClient);
+			«sensor.name»SubscriberDisconnect(subscriberClient);
+			«sensor.name»SubscriberDestroy(subscriberClient);
 
 			return 0;
 		}
