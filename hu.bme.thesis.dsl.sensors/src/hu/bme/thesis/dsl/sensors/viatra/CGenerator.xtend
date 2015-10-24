@@ -101,7 +101,7 @@ class CGenerator {
 		#include "string.h"
 		#include "MQTTClient.h"
 		
-		int «sensor.name»SubscriberInit();
+		MQTTClient «sensor.name»SubscriberInit();
 		void «sensor.name»SubscriberConnect(MQTTClient client, int cleansession);
 		void «sensor.name»SubscriberSubscribe(MQTTClient client, int qos);
 		void «sensor.name»SubscriberUnsubscribe(MQTTClient client);
@@ -139,7 +139,7 @@ class CGenerator {
 		};
 		«ENDFOR»
 		
-		int «sensor.name»SubscriberInit() {
+		MQTTClient «sensor.name»SubscriberInit() {
 			MQTTClient client;
 			MQTTClient_create(&client, "«setup.brokerUrl»", "«sensor.name.toUpperCase»_SUBSCRIBER", MQTTCLIENT_PERSISTENCE_NONE, NULL);
 			return client;
@@ -188,8 +188,10 @@ class CGenerator {
 			printf("Message arrived\n");
 			printf("     topic: %s\n", topicName);
 			«FOR parameter:message.parameters»
-			«IF parameter.type == "boolean" || parameter.type == "int"»
+			«IF (parameter.type == "boolean" || parameter.type == "int")»
 			printf("   message: %d\n", payload->«parameter.name»);
+			«ELSEIF parameter.type == "float"»
+			printf("   message: %f\n", payload->«parameter.name»);
 			«ELSEIF parameter.type == "String"»
 			printf("   message: %s\n", payload->«parameter.name»);
 			«ENDIF»
@@ -257,7 +259,7 @@ class CGenerator {
 			message.payload = payload;
 			message.payloadlen = sizeof(payload) + 1;
 			message.qos = qos;
-			message.retain = 0;
+			message.retained = 0;
 			MQTTClient_publishMessage(client, "«sensor.name»", &message, &token);
 			MQTTClient_waitForCompletion(client, token, 10000L);
 		}
