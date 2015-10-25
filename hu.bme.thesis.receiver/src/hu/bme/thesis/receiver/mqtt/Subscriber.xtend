@@ -3,6 +3,7 @@ package hu.bme.thesis.receiver.mqtt
 import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
+import org.eclipse.paho.client.mqttv3.MqttCallback
 
 class Subscriber {
 	
@@ -12,12 +13,19 @@ class Subscriber {
 	
 	new(String brokerAddress, String clientId) {
 		client = new MqttClient(brokerAddress, clientId, persistance)
+	}
+	
+	def connect() {
 		connOpts = new MqttConnectOptions
 		connOpts.cleanSession = true
+		client.connect(connOpts)
+	}
+	
+	def setCallback(MqttCallback callback) {
+		client.callback = callback
 	}
 	
 	def subscribe(String topic) {
-		client.connect(connOpts)
 		client.subscribe(topic)
 	}
 	
