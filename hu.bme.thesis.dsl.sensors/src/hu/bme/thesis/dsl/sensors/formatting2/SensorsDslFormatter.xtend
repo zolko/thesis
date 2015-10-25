@@ -4,11 +4,11 @@
 package hu.bme.thesis.dsl.sensors.formatting2
 
 import com.google.inject.Inject
+import hu.bme.thesis.dsl.sensors.sensorsDsl.DataParameter
 import hu.bme.thesis.dsl.sensors.sensorsDsl.Message
 import hu.bme.thesis.dsl.sensors.sensorsDsl.MessageParameter
 import hu.bme.thesis.dsl.sensors.sensorsDsl.Model
 import hu.bme.thesis.dsl.sensors.sensorsDsl.Sensor
-import hu.bme.thesis.dsl.sensors.sensorsDsl.Type
 import hu.bme.thesis.dsl.sensors.services.SensorsDslGrammarAccess
 import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
@@ -20,8 +20,8 @@ class SensorsDslFormatter extends AbstractFormatter2 {
 	def dispatch void format(Model model, extension IFormattableDocument document) {
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
 		format(model.getMqttSetup(), document);
-		for (Type types : model.getTypes()) {
-			format(types, document);
+		for (Message messages : model.getMessages()) {
+			format(messages, document);
 		}
 		for (Sensor sensors : model.getSensors()) {
 			format(sensors, document);
@@ -30,8 +30,17 @@ class SensorsDslFormatter extends AbstractFormatter2 {
 
 	def dispatch void format(Message message, extension IFormattableDocument document) {
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
-		for (MessageParameter parameters : message.getParameters()) {
-			format(parameters, document);
+		for (DataParameter dataParameters : message.getDataParameters()) {
+			format(dataParameters, document);
 		}
+		for (MessageParameter messageParameters : message.getMessageParameters()) {
+			format(messageParameters, document);
+		}
+	}
+
+	def dispatch void format(DataParameter dataParameter, extension IFormattableDocument document) {
+		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
+		format(dataParameter.getType(), document);
+		format(dataParameter.getValue(), document);
 	}
 }

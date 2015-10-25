@@ -21,8 +21,8 @@ class RuleDslScopeProvider extends AbstractDeclarativeScopeProvider {
 		scopeFor(rule.sensor.messages)
 	}
 	
-	def scope_Rule_param(Rule rule, EReference ref) {
-		scopeFor(rule.message.parameters)
+	def scope_Rule_dataparam(Rule rule, EReference ref) {
+		scopeFor(rule.message.dataParameters)
 	}
 
 }

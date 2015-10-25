@@ -13,9 +13,22 @@
     <genClasses ecoreClass="RuleDsl.ecore#//Rule">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RuleDsl.ecore#//Rule/sensor"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RuleDsl.ecore#//Rule/message"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RuleDsl.ecore#//Rule/param"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RuleDsl.ecore#//Rule/dataparam"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RuleDsl.ecore#//Rule/op"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RuleDsl.ecore#//Rule/value"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RuleDsl.ecore#//Rule/value"/>
+    </genClasses>
+    <genClasses ecoreClass="RuleDsl.ecore#//Value"/>
+    <genClasses ecoreClass="RuleDsl.ecore#//IntLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RuleDsl.ecore#//IntLiteral/value"/>
+    </genClasses>
+    <genClasses ecoreClass="RuleDsl.ecore#//StringLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RuleDsl.ecore#//StringLiteral/value"/>
+    </genClasses>
+    <genClasses ecoreClass="RuleDsl.ecore#//BooleanLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RuleDsl.ecore#//BooleanLiteral/value"/>
+    </genClasses>
+    <genClasses ecoreClass="RuleDsl.ecore#//FloatLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RuleDsl.ecore#//FloatLiteral/value"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

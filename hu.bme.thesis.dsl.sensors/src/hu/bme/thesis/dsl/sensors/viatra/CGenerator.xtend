@@ -129,7 +129,7 @@ class CGenerator {
 		
 		«FOR message:sensor.messages»
 		struct «message.name.toFirstUpper» {
-			«FOR parameter:message.parameters»
+			«FOR parameter:message.dataParameters»
 			«IF parameter.type.name == "boolean"»
 			int «parameter.name»;
 			«ELSE»
@@ -187,7 +187,7 @@ class CGenerator {
 		
 			printf("Message arrived\n");
 			printf("     topic: %s\n", topicName);
-			«FOR parameter:message.parameters»
+			«FOR parameter:message.dataParameters»
 			«IF (parameter.type == "boolean" || parameter.type == "int")»
 			printf("   message: %d\n", payload->«parameter.name»);
 			«ELSEIF parameter.type == "float"»
@@ -285,7 +285,7 @@ class CGenerator {
 		
 		«FOR message:sensor.messages»
 		struct «message.name.toFirstUpper» {
-			«FOR parameter:message.parameters»
+			«FOR parameter:message.dataParameters»
 			«IF parameter.type.name == "boolean"»
 			int «parameter.name»;
 			«ELSE»
@@ -309,7 +309,7 @@ class CGenerator {
 			«FOR message:sensor.messages»
 			
 			struct «message.name.toFirstUpper» «message.name»;
-			«FOR parameter:message.parameters»
+			«FOR parameter:message.dataParameters»
 			«IF parameter.type.name == "int"»
 			«message.name».«parameter.name» = 10;
 			«ELSEIF parameter.type.name == "boolean"»

@@ -9,28 +9,45 @@
       fileExtensions="sensors" ecorePackage="SensorsDsl.ecore#/">
     <genClasses ecoreClass="SensorsDsl.ecore#//Model">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SensorsDsl.ecore#//Model/mqttSetup"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SensorsDsl.ecore#//Model/types"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SensorsDsl.ecore#//Model/messages"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SensorsDsl.ecore#//Model/sensors"/>
     </genClasses>
     <genClasses ecoreClass="SensorsDsl.ecore#//MqttSetup">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//MqttSetup/brokerUrl"/>
     </genClasses>
-    <genClasses ecoreClass="SensorsDsl.ecore#//Type">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//Type/name"/>
+    <genClasses ecoreClass="SensorsDsl.ecore#//DataType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//DataType/name"/>
     </genClasses>
     <genClasses ecoreClass="SensorsDsl.ecore#//Message">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SensorsDsl.ecore#//Message/parameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//Message/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SensorsDsl.ecore#//Message/dataParameters"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SensorsDsl.ecore#//Message/messageParameters"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//Message/qos"/>
     </genClasses>
-    <genClasses ecoreClass="SensorsDsl.ecore#//DataType"/>
+    <genClasses ecoreClass="SensorsDsl.ecore#//Value"/>
+    <genClasses ecoreClass="SensorsDsl.ecore#//DataParameter">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SensorsDsl.ecore#//DataParameter/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//DataParameter/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SensorsDsl.ecore#//DataParameter/value"/>
+    </genClasses>
     <genClasses ecoreClass="SensorsDsl.ecore#//MessageParameter">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference SensorsDsl.ecore#//MessageParameter/type"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//MessageParameter/name"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference SensorsDsl.ecore#//MessageParameter/value"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference SensorsDsl.ecore#//MessageParameter/message"/>
     </genClasses>
     <genClasses ecoreClass="SensorsDsl.ecore#//Sensor">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//Sensor/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference SensorsDsl.ecore#//Sensor/messages"/>
+    </genClasses>
+    <genClasses ecoreClass="SensorsDsl.ecore#//IntLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//IntLiteral/value"/>
+    </genClasses>
+    <genClasses ecoreClass="SensorsDsl.ecore#//StringLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//StringLiteral/value"/>
+    </genClasses>
+    <genClasses ecoreClass="SensorsDsl.ecore#//BooleanLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//BooleanLiteral/value"/>
+    </genClasses>
+    <genClasses ecoreClass="SensorsDsl.ecore#//FloatLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//FloatLiteral/value"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

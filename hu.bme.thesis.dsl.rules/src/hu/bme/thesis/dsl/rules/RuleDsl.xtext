@@ -12,8 +12,19 @@ Rule:
 	"rule" "{"
 		sensor = [sensors::Sensor] "."
 		message = [sensors::Message] "."
-		param = [sensors::MessageParameter]
+		dataparam = [sensors::DataParameter]
 		op = ("<" | ">" | "==" | "!=")
-		value=[sensors::Type]
+		value=Value
 	"}"
+;
+
+terminal FLOAT:
+	INT "." INT "f"
+;
+
+Value:
+	{IntLiteral} value = INT |
+	{StringLiteral} value = STRING |
+	{BooleanLiteral} value = ("true" | "false") |
+	{FloatLiteral} value = FLOAT
 ;

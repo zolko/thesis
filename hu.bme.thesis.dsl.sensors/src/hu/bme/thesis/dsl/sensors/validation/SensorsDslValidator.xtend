@@ -3,8 +3,13 @@
  */
 package hu.bme.thesis.dsl.sensors.validation
 
-
-//import org.eclipse.xtext.validation.Check
+import hu.bme.thesis.dsl.sensors.sensorsDsl.BooleanLiteral
+import hu.bme.thesis.dsl.sensors.sensorsDsl.DataParameter
+import hu.bme.thesis.dsl.sensors.sensorsDsl.FloatLiteral
+import hu.bme.thesis.dsl.sensors.sensorsDsl.IntLiteral
+import hu.bme.thesis.dsl.sensors.sensorsDsl.SensorsDslPackage
+import hu.bme.thesis.dsl.sensors.sensorsDsl.StringLiteral
+import org.eclipse.xtext.validation.Check
 
 /**
  * This class contains custom validation rules. 
@@ -13,15 +18,19 @@ package hu.bme.thesis.dsl.sensors.validation
  */
 class SensorsDslValidator extends AbstractSensorsDslValidator {
 	
-//  public static val INVALID_NAME = 'invalidName'
-//
-//	@Check
-//	def checkGreetingStartsWithCapital(Greeting greeting) {
-//		if (!Character.isUpperCase(greeting.name.charAt(0))) {
-//			warning('Name should start with a capital', 
-//					MyDslPackage.Literals.GREETING__NAME,
-//					INVALID_NAME)
-//		}
-//	}
+	@Check
+	def checkParameterValueIsValid(DataParameter dataParameter) {
+		if (dataParameter.value != null) {
+			if (dataParameter.type.name == "int" && !(dataParameter.value instanceof IntLiteral)) {
+				error("The value must be int type", SensorsDslPackage.Literals.DATA_PARAMETER__VALUE, "invalidValue")
+			} else if (dataParameter.type.name == "float" && !(dataParameter.value instanceof FloatLiteral)) {
+				error("The value must be float type", SensorsDslPackage.Literals.DATA_PARAMETER__VALUE, "invalidValue")
+			} else if (dataParameter.type.name == "boolean" && !(dataParameter.value instanceof BooleanLiteral)) {
+				error("The value must be boolean type", SensorsDslPackage.Literals.DATA_PARAMETER__VALUE, "invalidValue")
+			} else if (dataParameter.type.name == "String" && !(dataParameter.value instanceof StringLiteral)) {
+				error("The value must be String type", SensorsDslPackage.Literals.DATA_PARAMETER__VALUE, "invalidValue")
+			}
+		}
+	}
 	
 }
