@@ -45,7 +45,18 @@ Value:
 ;
 
 DataParameter:
-	"parameter" type = DataType name = ID ("=" value = Value)?
+	"parameter" type = DataType name = ID ("=" value = Value)? ("criteria" criteria += Criteria (criteria += Criteria)*)?
+;
+
+Criteria:
+	critPrefix = ("min" | "max") critValue = CritValue
+;
+
+CritValue:
+	{IntCriteria} value = INT |
+	{FloatCriteria} value = FLOAT | 
+	{BooleanCriteria} value = ("true" | "false") |
+	{StringCriteria} value = STRING
 ;
 
 MessageParameter:

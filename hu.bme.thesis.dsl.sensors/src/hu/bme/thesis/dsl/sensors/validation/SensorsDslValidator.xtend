@@ -10,6 +10,10 @@ import hu.bme.thesis.dsl.sensors.sensorsDsl.IntLiteral
 import hu.bme.thesis.dsl.sensors.sensorsDsl.SensorsDslPackage
 import hu.bme.thesis.dsl.sensors.sensorsDsl.StringLiteral
 import org.eclipse.xtext.validation.Check
+import hu.bme.thesis.dsl.sensors.sensorsDsl.IntCriteria
+import hu.bme.thesis.dsl.sensors.sensorsDsl.FloatCriteria
+import hu.bme.thesis.dsl.sensors.sensorsDsl.BooleanCriteria
+import hu.bme.thesis.dsl.sensors.sensorsDsl.StringCriteria
 
 /**
  * This class contains custom validation rules. 
@@ -29,6 +33,23 @@ class SensorsDslValidator extends AbstractSensorsDslValidator {
 				error("The value must be boolean type", SensorsDslPackage.Literals.DATA_PARAMETER__VALUE, "invalidValue")
 			} else if (dataParameter.type.name == "String" && !(dataParameter.value instanceof StringLiteral)) {
 				error("The value must be String type", SensorsDslPackage.Literals.DATA_PARAMETER__VALUE, "invalidValue")
+			}
+		}
+	}
+	
+	@Check
+	def checkParameterCriteriaType(DataParameter dataParameter) {
+		if (!dataParameter.criteria.empty) {
+			for (crit : dataParameter.criteria) {
+				if (dataParameter.type.name == "int" && !(crit.critValue instanceof IntCriteria)) {
+					error("The criteria must be int type", SensorsDslPackage.Literals.DATA_PARAMETER__CRITERIA, "invalidCriteria")
+				} else if (dataParameter.type.name == "float" && !(crit.critValue instanceof FloatCriteria)) {
+					error("The criteria must be float type", SensorsDslPackage.Literals.DATA_PARAMETER__CRITERIA, "invalidCriteria")
+				} else if (dataParameter.type.name == "boolean" && !(crit.critValue instanceof BooleanCriteria)) {
+					error("The criteria must be boolean type", SensorsDslPackage.Literals.DATA_PARAMETER__CRITERIA, "invalidCriteria")
+				} else if (dataParameter.type.name == "String" && !(crit.critValue instanceof StringCriteria)) {
+					error("The criteria must be String type", SensorsDslPackage.Literals.DATA_PARAMETER__CRITERIA, "invalidCriteria")
+				}
 			}
 		}
 	}

@@ -29,7 +29,13 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SensorsDsl.ecore#//DataParameter/type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//DataParameter/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SensorsDsl.ecore#//DataParameter/value"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SensorsDsl.ecore#//DataParameter/criteria"/>
     </genClasses>
+    <genClasses ecoreClass="SensorsDsl.ecore#//Criteria">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//Criteria/critPrefix"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SensorsDsl.ecore#//Criteria/critValue"/>
+    </genClasses>
+    <genClasses ecoreClass="SensorsDsl.ecore#//CritValue"/>
     <genClasses ecoreClass="SensorsDsl.ecore#//MessageParameter">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference SensorsDsl.ecore#//MessageParameter/message"/>
     </genClasses>
@@ -48,6 +54,18 @@
     </genClasses>
     <genClasses ecoreClass="SensorsDsl.ecore#//FloatLiteral">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//FloatLiteral/value"/>
+    </genClasses>
+    <genClasses ecoreClass="SensorsDsl.ecore#//IntCriteria">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//IntCriteria/value"/>
+    </genClasses>
+    <genClasses ecoreClass="SensorsDsl.ecore#//FloatCriteria">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//FloatCriteria/value"/>
+    </genClasses>
+    <genClasses ecoreClass="SensorsDsl.ecore#//BooleanCriteria">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//BooleanCriteria/value"/>
+    </genClasses>
+    <genClasses ecoreClass="SensorsDsl.ecore#//StringCriteria">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SensorsDsl.ecore#//StringCriteria/value"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
