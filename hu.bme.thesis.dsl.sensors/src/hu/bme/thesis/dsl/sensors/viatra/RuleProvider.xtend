@@ -16,14 +16,18 @@ class RuleProvider {
 	
 	IncQueryEngine engine
 	String rootPath
+	JavaGenerator javaGenerator
+	CGenerator cGenerator
 	
 	new(IncQueryEngine engine, BatchTransformationStatements statements, String rootPath) {
 		this.engine = engine
 		this.statements = statements
 		this.rootPath = rootPath
-		JavaGenerator.generateGeneralSubscriber(rootPath)
-		CGenerator.generateProjectFile(rootPath)
-		CGenerator.generateCProjectFile(rootPath)
+		javaGenerator = new JavaGenerator
+		cGenerator = new CGenerator
+		javaGenerator.generateGeneralSubscriber(rootPath)
+		cGenerator.generateProjectFile(rootPath)
+		cGenerator.generateCProjectFile(rootPath)
 	}
 	
 	@Accessors(PUBLIC_GETTER)
@@ -34,8 +38,8 @@ class RuleProvider {
 	@Accessors(PUBLIC_GETTER)
 	val modelRule = createRule.precondition(model).action[ match |
 		for (sensor : match.model.sensors) {
-			CGenerator.generateCFiles(match.model.mqttSetup, sensor, rootPath)
-			JavaGenerator.generateJavaFiles(match.model.mqttSetup, sensor, rootPath)
+			cGenerator.generateCFiles(match.model.mqttSetup, sensor, rootPath)
+			javaGenerator.generateJavaFiles(match.model.mqttSetup, sensor, rootPath)
 		}
 	].build
 	

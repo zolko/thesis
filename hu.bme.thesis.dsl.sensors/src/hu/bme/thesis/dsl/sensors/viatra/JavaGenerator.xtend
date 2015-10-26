@@ -7,14 +7,14 @@ import java.io.FileWriter
 
 class JavaGenerator {
 	
-	public static def generateJavaFiles(MqttSetup setup, Sensor sensor, String path) {
+	public def generateJavaFiles(MqttSetup setup, Sensor sensor, String path) {
 		val rootFolder = createFolder(path)
 		val projectFolder = createFolder(new File(rootFolder, "hu.bme.thesis.generated.java").absolutePath)
 		val srcFolder = createFolder(new File(projectFolder, "src").absolutePath)
 		createSubscribers(setup, sensor, srcFolder)
 	}
 	
-	private static def createFolder(String path) {
+	private def createFolder(String path) {
 		val file = new File(path)
 		if (file != null && file.parentFile.exists) {
 			if (!file.exists) {
@@ -25,7 +25,7 @@ class JavaGenerator {
 		return null
 	}
 	
-	private static def createFile(File folder, String name) {
+	private def createFile(File folder, String name) {
 		val file = new File(folder, name)
 		if (file != null) {
 			if (file.exists) {
@@ -36,7 +36,7 @@ class JavaGenerator {
 		return file
 	}
 	
-	public static def generateGeneralSubscriber(String path) {
+	public def generateGeneralSubscriber(String path) {
 		val rootFolder = createFolder(path)
 		val projectFolder = createFolder(new File(rootFolder, "hu.bme.thesis.generated.java").absolutePath)
 		val srcFolder = createFolder(new File(projectFolder, "src").absolutePath)
@@ -87,7 +87,7 @@ class JavaGenerator {
 		writer.close
 	}
 	
-	private static def createSubscribers(MqttSetup setup, Sensor sensor, File srcFolder) {
+	private def createSubscribers(MqttSetup setup, Sensor sensor, File srcFolder) {
 		val subscriberFile = createFile(srcFolder, sensor.name.toFirstUpper + "Receiver.java")
 		val writer = new FileWriter(subscriberFile)
 		val fileContent = '''

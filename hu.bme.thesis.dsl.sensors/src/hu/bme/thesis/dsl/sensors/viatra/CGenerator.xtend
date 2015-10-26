@@ -4,10 +4,11 @@ import hu.bme.thesis.dsl.sensors.sensorsDsl.MqttSetup
 import hu.bme.thesis.dsl.sensors.sensorsDsl.Sensor
 import java.io.File
 import java.io.FileWriter
+import hu.bme.thesis.dsl.sensors.sensorsDsl.Message
 
 class CGenerator {
 	
-	public static def generateCFiles(MqttSetup setup, Sensor sensor, String path) {
+	public def generateCFiles(MqttSetup setup, Sensor sensor, String path) {
 		val rootFolder = createFolder(path)
 		val projectFolder = createFolder(new File(rootFolder, "hu.bme.thesis.generated.c").absolutePath)
 		val srcFolder = createFolder(new File(projectFolder, "src").absolutePath)
@@ -19,7 +20,7 @@ class CGenerator {
 		createMain(sensor, srcFolder)
 	}
 	
-	private static def createFolder(String path) {
+	private def createFolder(String path) {
 		val file = new File(path)
 		if (file != null && file.parentFile.exists) {
 			if (!file.exists) {
@@ -30,7 +31,7 @@ class CGenerator {
 		return null
 	}
 	
-	private static def createFile(File folder, String name) {
+	private def createFile(File folder, String name) {
 		val file = new File(folder, name)
 		if (file != null) {
 			if (file.exists) {
@@ -41,7 +42,7 @@ class CGenerator {
 		return file
 	}
 	
-	public static def generateCProjectFile(String path) {
+	public def generateCProjectFile(String path) {
 		val rootFolder = createFolder(path)
 		val projectFolder = createFolder(new File(rootFolder, "hu.bme.thesis.generated.c").absolutePath)
 		val cprojectFile = createFile(projectFolder, ".cproject")
@@ -53,7 +54,7 @@ class CGenerator {
 		writer.close
 	}
 	
-	public static def generateProjectFile(String path) {
+	public def generateProjectFile(String path) {
 		val rootFolder = createFolder(path)
 		val projectFolder = createFolder(new File(rootFolder, "hu.bme.thesis.generated.c").absolutePath)
 		val projectFile = createFile(projectFolder, ".project")
@@ -90,23 +91,15 @@ class CGenerator {
 		writer.close
 	}
 	
-	private static def createMessagesHeader(Sensor sensor, File srcFolder) {
+	private def createMessagesHeader(Sensor sensor, File srcFolder) {
 		val subscriberFile = createFile(srcFolder, sensor.name.toFirstUpper + "Messages.h")
 		val writer = new FileWriter(subscriberFile)
 		val fileContent = '''
 		#ifndef «sensor.name.toUpperCase»MESSAGES_H_
 		#define «sensor.name.toUpperCase»MESSAGES_H_
-		
 		«FOR message:sensor.messages»
-		typedef struct {
-			«FOR parameter:message.dataParameters»
-			«IF parameter.type.name == "boolean"»
-			int «parameter.name»;
-			«ELSE»
-			«parameter.type.name» «parameter.name»;
-			«ENDIF»
-			«ENDFOR»
-		} «message.name.toFirstUpper»;
+		
+		«createMessageStruct(message)»
 		«ENDFOR»
 		
 		#endif /* «sensor.name.toUpperCase»MESSAGES_H_ */
@@ -115,7 +108,26 @@ class CGenerator {
 		writer.close
 	}
 	
-	private static def createSubscriberHeaders(Sensor sensor, File srcFolder) {
+	private def createMessageStruct(Message message) '''
+		«FOR parameter:message.messageParameters»
+		«createMessageStruct(parameter.message)»
+		
+		«ENDFOR»
+		typedef struct {
+			«FOR parameter:message.dataParameters»
+			«IF parameter.type.name == "boolean"»
+			int «parameter.name»;
+			«ELSE»
+			«parameter.type.name» «parameter.name»;
+			«ENDIF»
+			«ENDFOR»
+			«FOR parameter:message.messageParameters»
+			«parameter.message.name.toFirstUpper» «parameter.message.name»;
+			«ENDFOR»
+		} «message.name.toFirstUpper»;
+	'''
+	
+	private def createSubscriberHeaders(Sensor sensor, File srcFolder) {
 		val subscriberFile = createFile(srcFolder, sensor.name.toFirstUpper + "Subscriber.h")
 		val writer = new FileWriter(subscriberFile)
 		val fileContent = '''
@@ -134,11 +146,9 @@ class CGenerator {
 		void «sensor.name»SubscriberUnsubscribe(MQTTClient client);
 		void «sensor.name»SubscriberDisconnect(MQTTClient client);
 		void «sensor.name»SubscriberDestroy(MQTTClient client);
-		«FOR message:sensor.messages»
-		void «message.name»ConnLost(void *context, char *cause);
-		void «message.name»Delivered(void *context, MQTTClient_deliveryToken dt);
-		int «message.name»MessageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message);
-		«ENDFOR»
+		void «sensor.name»ConnLost(void *context, char *cause);
+		void «sensor.name»Delivered(void *context, MQTTClient_deliveryToken dt);
+		int «sensor.name»MessageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message);
 		
 		#endif /* «sensor.name.toUpperCase»SUBSCRIBER_H_ */
 		'''
@@ -146,7 +156,7 @@ class CGenerator {
 		writer.close
 	}
 	
-	private static def createSubscriberSources(MqttSetup setup, Sensor sensor, File srcFolder) {
+	private def createSubscriberSources(MqttSetup setup, Sensor sensor, File srcFolder) {
 		val publisherFile = createFile(srcFolder, sensor.name.toFirstUpper + "Subscriber.c")
 		val writer = new FileWriter(publisherFile)
 		val fileContent = '''
@@ -163,9 +173,7 @@ class CGenerator {
 		void «sensor.name»SubscriberConnect(MQTTClient client, int cleansession) {
 			MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
 			conn_opts.cleansession = cleansession;
-			«FOR message:sensor.messages»
-			MQTTClient_setCallbacks(client, NULL, «message.name»ConnLost, «message.name»MessageArrived, «message.name»Delivered);
-			«ENDFOR»
+			MQTTClient_setCallbacks(client, NULL, «sensor.name»ConnLost, «sensor.name»MessageArrived, «sensor.name»Delivered);
 			MQTTClient_connect(client, &conn_opts);
 		}
 		
@@ -184,45 +192,32 @@ class CGenerator {
 		void «sensor.name»SubscriberDestroy(MQTTClient client) {
 			MQTTClient_destroy(&client);
 		}
-		«FOR message:sensor.messages»
 		
-		void «message.name»ConnLost(void *context, char *cause) {
+		void «sensor.name»ConnLost(void *context, char *cause) {
 			printf("\nConnection lost\n");
 			printf("     cause: %s\n", cause);
 		}
 		
-		void «message.name»Delivered(void *context, MQTTClient_deliveryToken dt) {
+		void «sensor.name»Delivered(void *context, MQTTClient_deliveryToken dt) {
 			printf("Message with token value %d delivery confirmed\n", dt);
 			deliveredtoken = dt;
 		}
 		
-		int «message.name»MessageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message) {
-			«message.name.toFirstUpper»* payload;
-			payload = («message.name.toFirstUpper»*)message->payload;
-		
+		int «sensor.name»MessageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message) {
 			printf("Message arrived\n");
 			printf("     topic: %s\n", topicName);
-			«FOR parameter:message.dataParameters»
-			«IF (parameter.type.name == "boolean" || parameter.type.name == "int")»
-			printf("   message: %d\n", payload->«parameter.name»);
-			«ELSEIF parameter.type.name == "float"»
-			printf("   message: %f\n", payload->«parameter.name»);
-			«ELSEIF parameter.type.name == "String"»
-			printf("   message: %s\n", payload->«parameter.name»);
-			«ENDIF»
-			«ENDFOR»
+			printf("   message: %s\n", message->payload);
 			MQTTClient_freeMessage(&message);
 			MQTTClient_free(topicName);
 		
 			return 1;
 		}
-		«ENDFOR»
 		'''
 		writer.write(fileContent)
 		writer.close
 	}
 	
-	private static def createPublisherHeaders(Sensor sensor, File srcFolder) {
+	private def createPublisherHeaders(Sensor sensor, File srcFolder) {
 		val publisherFile = createFile(srcFolder, sensor.name.toFirstUpper + "Publisher.h")
 		val writer = new FileWriter(publisherFile)
 		val fileContent = '''
@@ -249,7 +244,7 @@ class CGenerator {
 		writer.close
 	}
 	
-	private static def createPublisherSources(MqttSetup setup, Sensor sensor, File srcFolder) {
+	private def createPublisherSources(MqttSetup setup, Sensor sensor, File srcFolder) {
 		val publisherFile = new File(srcFolder, sensor.name.toFirstUpper + "Publisher.c")
 		if (publisherFile != null && publisherFile.exists) {
 			publisherFile.delete
@@ -277,21 +272,9 @@ class CGenerator {
 			MQTTClient_message message = MQTTClient_message_initializer;
 			
 			char payload[100] = "{";
-			«FOR parameter:message.dataParameters»
-			char «parameter.name»[«parameter.name.length»];
-			«IF (parameter.type.name == "int" || parameter.type.name == "boolean")»
-			sprintf(«parameter.name», "%d", «message.name».«parameter.name»);
-			«ELSEIF parameter.type.name == "float"»
-			sprintf(«parameter.name», "%f", «message.name».«parameter.name»);
-			«ELSEIF parameter.type.name == "String"»
-			sprintf(«parameter.name», "%s", «message.name».«parameter.name»);
-			«ENDIF»
-			strcat(payload, "\"«parameter.name»\":");
-			strcat(payload, «parameter.name»);
-			«IF parameter != message.dataParameters.last»
-			strcat(payload, ",");
-			«ENDIF»
-			«ENDFOR»
+			
+			«createJsonStringFromDataParameters(message)»
+			
 			strcat(payload, "}");
 			
 			message.payload = payload;
@@ -315,7 +298,38 @@ class CGenerator {
 		writer.close
 	}
 	
-	private static def createMain(Sensor sensor, File srcFolder) {
+	private def createJsonStringFromDataParameters(Message message) '''
+		«FOR parameter:message.dataParameters»
+		char «parameter.name»[«parameter.name.length»];
+		«IF (parameter.type.name == "int" || parameter.type.name == "boolean")»
+		sprintf(«parameter.name», "%d", «message.name».«parameter.name»);
+		«ELSEIF parameter.type.name == "float"»
+		sprintf(«parameter.name», "%f", «message.name».«parameter.name»);
+		«ELSEIF parameter.type.name == "String"»
+		sprintf(«parameter.name», "%s", «message.name».«parameter.name»);
+		«ENDIF»
+		strcat(payload, "\"«parameter.name»\":");
+		strcat(payload, «parameter.name»);
+		«IF parameter != message.dataParameters.last»
+		strcat(payload, ",");
+		«ENDIF»
+		«ENDFOR»
+		«IF (!message.messageParameters.empty && !message.dataParameters.empty)»
+		strcat(payload, ",");
+		«ENDIF»
+		«FOR parameter:message.messageParameters»
+		
+		«parameter.message.name.toFirstUpper» «parameter.message.name» = «message.name».«parameter.message.name»;
+		strcat(payload, "\"«parameter.message.name»\":{");
+		«createJsonStringFromDataParameters(parameter.message)»
+		strcat(payload, "}");
+		«IF parameter != message.messageParameters.last»
+		strcat(payload, ",");
+		«ENDIF»
+		«ENDFOR»
+	'''
+	
+	private def createMain(Sensor sensor, File srcFolder) {
 		val mainFile = createFile(srcFolder, sensor.name.toFirstUpper + "Main.c")
 		val writer = new FileWriter(mainFile)
 		val fileContent = '''
@@ -335,18 +349,7 @@ class CGenerator {
 			«sensor.name»PublisherConnect(publisherClient, 1);
 			«FOR message:sensor.messages»
 			
-			«message.name.toFirstUpper» «message.name»;
-			«FOR parameter:message.dataParameters»
-			«IF parameter.type.name == "int"»
-			«message.name».«parameter.name» = 10;
-			«ELSEIF parameter.type.name == "boolean"»
-			«message.name».«parameter.name» = 1;
-			«ELSEIF parameter.type.name == "float"»
-			«message.name».«parameter.name» = 10.5f;
-			«ELSEIF parameter.type.name == "String"»
-			«message.name».«parameter.name» = "Hello World!";
-			«ENDIF»
-			«ENDFOR»
+			«createMessageObjects(message)»
 			
 			«sensor.name»PublisherPublish«message.name.toFirstUpper»(publisherClient, «message.name», «message.qos»);
 			«ENDFOR»
@@ -364,5 +367,27 @@ class CGenerator {
 		writer.write(fileContent)
 		writer.close
 	}
+	
+	private def createMessageObjects(Message message) '''
+		«FOR parameter:message.messageParameters»
+		«createMessageObjects(parameter.message)»
+		
+		«ENDFOR»
+		«message.name.toFirstUpper» «message.name»;
+		«FOR parameter:message.dataParameters»
+		«IF parameter.type.name == "int"»
+		«message.name».«parameter.name» = 10;
+		«ELSEIF parameter.type.name == "boolean"»
+		«message.name».«parameter.name» = 1;
+		«ELSEIF parameter.type.name == "float"»
+		«message.name».«parameter.name» = 10.5f;
+		«ELSEIF parameter.type.name == "String"»
+		«message.name».«parameter.name» = "Hello World!";
+		«ENDIF»
+		«ENDFOR»
+		«FOR parameter:message.messageParameters»
+		«message.name».«parameter.message.name» = «parameter.message.name»;
+		«ENDFOR»
+	'''
 	
 }
