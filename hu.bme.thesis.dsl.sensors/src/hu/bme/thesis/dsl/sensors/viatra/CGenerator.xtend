@@ -11,6 +11,7 @@ class CGenerator {
 		val rootFolder = createFolder(path)
 		val projectFolder = createFolder(new File(rootFolder, "hu.bme.thesis.generated.c").absolutePath)
 		val srcFolder = createFolder(new File(projectFolder, "src").absolutePath)
+		createMessagesHeader(sensor, srcFolder)
 		createPublisherHeaders(sensor, srcFolder)
 		createPublisherSources(setup, sensor, srcFolder)
 		createSubscriberHeaders(sensor, srcFolder)
@@ -89,6 +90,31 @@ class CGenerator {
 		writer.close
 	}
 	
+	private static def createMessagesHeader(Sensor sensor, File srcFolder) {
+		val subscriberFile = createFile(srcFolder, sensor.name.toFirstUpper + "Messages.h")
+		val writer = new FileWriter(subscriberFile)
+		val fileContent = '''
+		#ifndef «sensor.name.toUpperCase»MESSAGES_H_
+		#define «sensor.name.toUpperCase»MESSAGES_H_
+		
+		«FOR message:sensor.messages»
+		typedef struct {
+			«FOR parameter:message.dataParameters»
+			«IF parameter.type.name == "boolean"»
+			int «parameter.name»;
+			«ELSE»
+			«parameter.type.name» «parameter.name»;
+			«ENDIF»
+			«ENDFOR»
+		} «message.name.toFirstUpper»;
+		«ENDFOR»
+		
+		#endif /* «sensor.name.toUpperCase»MESSAGES_H_ */
+		'''
+		writer.write(fileContent)
+		writer.close
+	}
+	
 	private static def createSubscriberHeaders(Sensor sensor, File srcFolder) {
 		val subscriberFile = createFile(srcFolder, sensor.name.toFirstUpper + "Subscriber.h")
 		val writer = new FileWriter(subscriberFile)
@@ -100,6 +126,7 @@ class CGenerator {
 		#include "stdlib.h"
 		#include "string.h"
 		#include "MQTTClient.h"
+		#include "«sensor.name»Messages.h"
 		
 		MQTTClient «sensor.name»SubscriberInit();
 		void «sensor.name»SubscriberConnect(MQTTClient client, int cleansession);
@@ -126,18 +153,6 @@ class CGenerator {
 		#include "«sensor.name»Subscriber.h"
 		
 		volatile MQTTClient_deliveryToken deliveredtoken;
-		
-		«FOR message:sensor.messages»
-		struct «message.name.toFirstUpper» {
-			«FOR parameter:message.dataParameters»
-			«IF parameter.type.name == "boolean"»
-			int «parameter.name»;
-			«ELSE»
-			«parameter.type.name» «parameter.name»;
-			«ENDIF»
-			«ENDFOR»
-		};
-		«ENDFOR»
 		
 		MQTTClient «sensor.name»SubscriberInit() {
 			MQTTClient client;
@@ -182,17 +197,17 @@ class CGenerator {
 		}
 		
 		int «message.name»MessageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message) {
-			struct «message.name.toFirstUpper»* payload;
-			payload = (struct «message.name.toFirstUpper»*)message->payload;
+			«message.name.toFirstUpper»* payload;
+			payload = («message.name.toFirstUpper»*)message->payload;
 		
 			printf("Message arrived\n");
 			printf("     topic: %s\n", topicName);
 			«FOR parameter:message.dataParameters»
-			«IF (parameter.type == "boolean" || parameter.type == "int")»
+			«IF (parameter.type.name == "boolean" || parameter.type.name == "int")»
 			printf("   message: %d\n", payload->«parameter.name»);
-			«ELSEIF parameter.type == "float"»
+			«ELSEIF parameter.type.name == "float"»
 			printf("   message: %f\n", payload->«parameter.name»);
-			«ELSEIF parameter.type == "String"»
+			«ELSEIF parameter.type.name == "String"»
 			printf("   message: %s\n", payload->«parameter.name»);
 			«ENDIF»
 			«ENDFOR»
@@ -218,10 +233,13 @@ class CGenerator {
 		#include "stdlib.h"
 		#include "string.h"
 		#include "MQTTClient.h"
+		#include "«sensor.name»Messages.h"
 		
 		MQTTClient «sensor.name»PublisherInit();
 		void «sensor.name»PublisherConnect(MQTTClient client, int cleansession);
-		void «sensor.name»PublisherPublishMessage(MQTTClient client, void* payload, int qos);
+		«FOR message:sensor.messages»
+		void «sensor.name»PublisherPublish«message.name.toFirstUpper»(MQTTClient client, «message.name.toFirstUpper» «message.name», int qos);
+		«ENDFOR»
 		void «sensor.name»PublisherDisconnect(MQTTClient client);
 		void «sensor.name»PublisherDestroy(MQTTClient client);
 		
@@ -252,17 +270,38 @@ class CGenerator {
 			conn_opts.cleansession = cleansession;
 			MQTTClient_connect(client, &conn_opts);
 		}
+		«FOR message:sensor.messages»
 		
-		void «sensor.name»PublisherPublishMessage(MQTTClient client, void* payload, int qos) {
+		void «sensor.name»PublisherPublish«message.name.toFirstUpper»(MQTTClient client, «message.name.toFirstUpper» «message.name», int qos) {
 			MQTTClient_deliveryToken token;
 			MQTTClient_message message = MQTTClient_message_initializer;
+			
+			char payload[100] = "{";
+			«FOR parameter:message.dataParameters»
+			char «parameter.name»[«parameter.name.length»];
+			«IF (parameter.type.name == "int" || parameter.type.name == "boolean")»
+			sprintf(«parameter.name», "%d", «message.name».«parameter.name»);
+			«ELSEIF parameter.type.name == "float"»
+			sprintf(«parameter.name», "%f", «message.name».«parameter.name»);
+			«ELSEIF parameter.type.name == "String"»
+			sprintf(«parameter.name», "%s", «message.name».«parameter.name»);
+			«ENDIF»
+			strcat(payload, "\"«parameter.name»\":");
+			strcat(payload, «parameter.name»);
+			«IF parameter != message.dataParameters.last»
+			strcat(payload, ",");
+			«ENDIF»
+			«ENDFOR»
+			strcat(payload, "}");
+			
 			message.payload = payload;
-			message.payloadlen = sizeof(payload) + 1;
+			message.payloadlen = strlen(payload);
 			message.qos = qos;
 			message.retained = 0;
 			MQTTClient_publishMessage(client, "«sensor.name»", &message, &token);
 			MQTTClient_waitForCompletion(client, token, 10000L);
 		}
+		«ENDFOR»
 		
 		void «sensor.name»PublisherDisconnect(MQTTClient client) {
 			MQTTClient_disconnect(client, 1000L);
@@ -282,19 +321,7 @@ class CGenerator {
 		val fileContent = '''
 		#include "«sensor.name»Publisher.h"
 		#include "«sensor.name»Subscriber.h"
-		
-		«FOR message:sensor.messages»
-		struct «message.name.toFirstUpper» {
-			«FOR parameter:message.dataParameters»
-			«IF parameter.type.name == "boolean"»
-			int «parameter.name»;
-			«ELSE»
-			«parameter.type.name» «parameter.name»;
-			«ENDIF»
-			«ENDFOR»
-		};
 
-		«ENDFOR»
 		int main(int argc, char* argv[])
 		{
 			MQTTClient publisherClient;
@@ -308,7 +335,7 @@ class CGenerator {
 			«sensor.name»PublisherConnect(publisherClient, 1);
 			«FOR message:sensor.messages»
 			
-			struct «message.name.toFirstUpper» «message.name»;
+			«message.name.toFirstUpper» «message.name»;
 			«FOR parameter:message.dataParameters»
 			«IF parameter.type.name == "int"»
 			«message.name».«parameter.name» = 10;
@@ -321,7 +348,7 @@ class CGenerator {
 			«ENDIF»
 			«ENDFOR»
 			
-			«sensor.name»PublisherPublishMessage(publisherClient, &«message.name», «message.qos»);
+			«sensor.name»PublisherPublish«message.name.toFirstUpper»(publisherClient, «message.name», «message.qos»);
 			«ENDFOR»
 			
 			«sensor.name»PublisherDisconnect(publisherClient);

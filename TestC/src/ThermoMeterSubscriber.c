@@ -1,41 +1,34 @@
-#include "thermometerSubscriber.h"
+#include "thermoMeterSubscriber.h"
 
 volatile MQTTClient_deliveryToken deliveredtoken;
 
-struct ThermoMessage {
-	int temperature;
-};
-struct BasicMessage {
-	int powerOn;
-};
-
-MQTTClient thermometerSubscriberInit() {
+MQTTClient thermoMeterSubscriberInit() {
 	MQTTClient client;
 	MQTTClient_create(&client, "tcp://127.0.0.10:9876", "THERMOMETER_SUBSCRIBER", MQTTCLIENT_PERSISTENCE_NONE, NULL);
 	return client;
 }
 
-void thermometerSubscriberConnect(MQTTClient client, int cleansession) {
+void thermoMeterSubscriberConnect(MQTTClient client, int cleansession) {
 	MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
 	conn_opts.cleansession = cleansession;
 	MQTTClient_setCallbacks(client, NULL, thermoMessageConnLost, thermoMessageMessageArrived, thermoMessageDelivered);
-	MQTTClient_setCallbacks(client, NULL, basicMessageConnLost, basicMessageMessageArrived, basicMessageDelivered);
+	MQTTClient_setCallbacks(client, NULL, basicSensorMessageConnLost, basicSensorMessageMessageArrived, basicSensorMessageDelivered);
 	MQTTClient_connect(client, &conn_opts);
 }
 
-void thermometerSubscriberSubscribe(MQTTClient client, int qos) {
-	MQTTClient_subscribe(client, "thermometer", qos);
+void thermoMeterSubscriberSubscribe(MQTTClient client, int qos) {
+	MQTTClient_subscribe(client, "thermoMeter", qos);
 }
 
-void thermometerSubscriberUnsubscribe(MQTTClient client) {
-	MQTTClient_unsubscribe(client, "thermometer");
+void thermoMeterSubscriberUnsubscribe(MQTTClient client) {
+	MQTTClient_unsubscribe(client, "thermoMeter");
 }
 
-void thermometerSubscriberDisconnect(MQTTClient client) {
+void thermoMeterSubscriberDisconnect(MQTTClient client) {
 	MQTTClient_disconnect(client, 1000L);
 }
 
-void thermometerSubscriberDestroy(MQTTClient client) {
+void thermoMeterSubscriberDestroy(MQTTClient client) {
 	MQTTClient_destroy(&client);
 }
 
@@ -50,35 +43,35 @@ void thermoMessageDelivered(void *context, MQTTClient_deliveryToken dt) {
 }
 
 int thermoMessageMessageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message) {
-	struct ThermoMessage* payload;
-	payload = (struct ThermoMessage*)message->payload;
+	ThermoMessage* payload;
+	payload = (ThermoMessage*)message->payload;
 
 	printf("Message arrived\n");
 	printf("     topic: %s\n", topicName);
-	printf("	message: %d\n", payload->temperature);
+	printf("   message: %f\n", payload->temperature);
 	MQTTClient_freeMessage(&message);
 	MQTTClient_free(topicName);
 
 	return 1;
 }
 
-void basicMessageConnLost(void *context, char *cause) {
+void basicSensorMessageConnLost(void *context, char *cause) {
 	printf("\nConnection lost\n");
 	printf("     cause: %s\n", cause);
 }
 
-void basicMessageDelivered(void *context, MQTTClient_deliveryToken dt) {
+void basicSensorMessageDelivered(void *context, MQTTClient_deliveryToken dt) {
 	printf("Message with token value %d delivery confirmed\n", dt);
 	deliveredtoken = dt;
 }
 
-int basicMessageMessageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message) {
-	struct BasicMessage* payload;
-	payload = (struct BasicMessage*)message->payload;
+int basicSensorMessageMessageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message) {
+	BasicSensorMessage* payload;
+	payload = (BasicSensorMessage*)message->payload;
 
 	printf("Message arrived\n");
 	printf("     topic: %s\n", topicName);
-	printf("	message: %d\n", payload->powerOn);
+	printf("   message: %d\n", payload->powerOn);
 	MQTTClient_freeMessage(&message);
 	MQTTClient_free(topicName);
 
