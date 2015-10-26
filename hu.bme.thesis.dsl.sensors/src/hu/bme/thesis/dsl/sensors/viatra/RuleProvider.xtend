@@ -26,6 +26,8 @@ class RuleProvider {
 		javaGenerator = new JavaGenerator
 		cGenerator = new CGenerator
 		javaGenerator.generateGeneralSubscriber(rootPath)
+		javaGenerator.generateGeneralPublisher(rootPath)
+		javaGenerator.generateGeneralCallback(rootPath)
 		cGenerator.generateProjectFile(rootPath)
 		cGenerator.generateCProjectFile(rootPath)
 	}

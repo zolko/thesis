@@ -43,6 +43,8 @@ class JavaGenerator {
 		val subscriberFile = createFile(srcFolder, "Subscriber.java")
 		val writer = new FileWriter(subscriberFile)
 		val fileContent = '''
+		package hu.bme.thesis.generated.java;
+		
 		import org.eclipse.paho.client.mqttv3.MqttCallback;
 		import org.eclipse.paho.client.mqttv3.MqttClient;
 		import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -87,34 +89,100 @@ class JavaGenerator {
 		writer.close
 	}
 	
+	public def generateGeneralPublisher(String path) {
+		val rootFolder = createFolder(path)
+		val projectFolder = createFolder(new File(rootFolder, "hu.bme.thesis.generated.java").absolutePath)
+		val srcFolder = createFolder(new File(projectFolder, "src").absolutePath)
+		val subscriberFile = createFile(srcFolder, "Publisher.java")
+		val writer = new FileWriter(subscriberFile)
+		val fileContent = '''
+		package hu.bme.thesis.generated.java;
+		
+		import org.eclipse.paho.client.mqttv3.MqttCallback;
+		import org.eclipse.paho.client.mqttv3.MqttClient;
+		import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+		import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+		
+		class Publisher {
+			
+			private MqttClient client;
+			private MqttConnectOptions connOpts;
+			private MemoryPersistence persistance;
+			
+			public Publisher(String brokerUrl, String clientId) {				
+				persistance = new MemoryPersistence();
+				client = new MqttClient(brokerUrl, clientId, persistance);
+				connOpts = new MqttConnectOptions();
+				connOpts.setCleanSession(true);
+			}
+			
+			public void connect() {
+				client.connect(connOpts);
+			}
+			
+			public void publish(String topic, byte[] payload, int qos) {
+				client.publish(topic, payload, qos, false);
+			}
+			
+			public void disconnect() {
+				client.disconnect();
+			}
+			
+		}
+		'''
+		writer.write(fileContent)
+		writer.close
+	}
+	
+	public def generateGeneralCallback(String path) {
+		val rootFolder = createFolder(path)
+		val projectFolder = createFolder(new File(rootFolder, "hu.bme.thesis.generated.java").absolutePath)
+		val srcFolder = createFolder(new File(projectFolder, "src").absolutePath)
+		val subscriberFile = createFile(srcFolder, "GeneralCallback.java")
+		val writer = new FileWriter(subscriberFile)
+		val fileContent = '''
+		package hu.bme.thesis.generated.java;
+		
+		import org.eclipse.paho.client.mqttv3.MqttCallback;
+		import org.eclipse.paho.client.mqttv3.MqttMessage;
+		import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+		
+		class GeneralCallback implements MqttCallback {
+			
+			@Override
+			public void deliveryComplete(IMqttDeliveryToken token) {
+				System.out.println("Delivery completed!");
+			}
+			
+			@Override
+			public void messageArrived(String topic, MqttMessage message) throws Exception {
+				arrived(topic, message.getPayload());
+			}
+			
+			public void arrived(String topic, byte[] message);
+			
+		}
+		'''
+		writer.write(fileContent)
+		writer.close
+	}
+	
 	private def createSubscribers(MqttSetup setup, Sensor sensor, File srcFolder) {
 		val subscriberFile = createFile(srcFolder, sensor.name.toFirstUpper + "Receiver.java")
 		val writer = new FileWriter(subscriberFile)
 		val fileContent = '''
-		import de.undercouch.bson4jackson.BsonFactory;
-		import hu.bme.thesis.model.ModelFactory;
-		import org.eclipse.emf.common.util.URI;
-		import org.eclipse.emf.ecore.resource.Resource;
-		import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-		import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
-		import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-		import org.eclipse.paho.client.mqttv3.MqttCallback;
-		import org.eclipse.paho.client.mqttv3.MqttMessage;
+		package hu.bme.thesis.generated.java;
 		
-		class «sensor.name»Receiver implements MqttCallback {
+		import com.fasterxml.jackson.core.JsonFactory;
+		import com.fasterxml.jackson.databind.ObjectMapper;
+		import hu.bme.thesis.generated.java.GeneralCallback;
+		import hu.bme.thesis.generated.java.Subscriber;
+		
+		class «sensor.name»Receiver extends GeneralCallback {
 			
 			private Subscriber subscriber;
-			private BsonFactory factory;
-			private Resource resource;
 			
-			public «sensor.name»Receiver() {
-				factory = new BsonFactory();
-				Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-				Map<String,Object> m = reg.getExtensionToFactoryMap();
-		        m.put("model", new XMIResourceFactoryImpl());
-		        ResourceSet resourceSet = new ResourceSetImpl();
-		        resource = resourceSet.createResource(URI.createURI("model/thesis.model"));
-				
+			public «sensor.name»Receiver() {				
 				subscriber = new Subscriber("«setup.brokerUrl»", "«sensor.name.toUpperCase»_SUBSCRIBER");
 				subscriber.setCallback(this);
 			}
@@ -136,22 +204,14 @@ class JavaGenerator {
 			}
 			
 			@Override
-			public void connectionLost(Throwable arg0) {
-				throw new UnsupportedOperationException("Connection lost!");
-			}
-		
-			@Override
-			public void deliveryComplete(IMqttDeliveryToken arg0) {
-				System.out.println("Delivery completed!");
-			}
-		
-			@Override
-			public void messageArrived(String topic, MqttMessage message) throws Exception {
-				ByteArrayInputStream bais = new ByteArrayInputStream(message.getPayload());
-				ObjectMapper mapper = new ObjectMapper(factory);
-				Message message = (Message) resource.getContents().get(0);
-				mapper.readValue(bais, Message.class);
-				//TODO!
+			public void arrived(String topic, byte[] message) {
+				String msg = new String(message);
+				ObjectMapper mapper = new ObjectMapper(new JsonFactory());
+				System.out.println("Get msg: " + msg);
+				/*
+				ThermoMessage thermoMessage = mapper.readValue(msg, ThermoMessage.class);
+				System.out.println("temperature: " + thermoMessage.getTemperature());
+				*/
 			}
 		}
 		'''
