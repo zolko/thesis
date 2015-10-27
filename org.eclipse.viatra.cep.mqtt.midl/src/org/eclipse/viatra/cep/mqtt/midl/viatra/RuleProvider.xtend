@@ -18,6 +18,7 @@ class RuleProvider {
 	String rootPath
 	JavaGenerator javaGenerator
 	CGenerator cGenerator
+	PatternGenerator patternGenerator
 	
 	new(IncQueryEngine engine, BatchTransformationStatements statements, String rootPath) {
 		this.engine = engine
@@ -25,11 +26,14 @@ class RuleProvider {
 		this.rootPath = rootPath
 		javaGenerator = new JavaGenerator
 		cGenerator = new CGenerator
+		patternGenerator = new PatternGenerator
 		javaGenerator.generateGeneralSubscriber(rootPath)
 		javaGenerator.generateGeneralPublisher(rootPath)
 		javaGenerator.generateGeneralCallback(rootPath)
 		cGenerator.generateProjectFile(rootPath)
 		cGenerator.generateCProjectFile(rootPath)
+		patternGenerator.generateDefaultEiqFile(rootPath)
+		patternGenerator.generateDefaultVeplFile(rootPath)
 	}
 	
 	@Accessors(PUBLIC_GETTER)
@@ -37,6 +41,7 @@ class RuleProvider {
 		for (sensor : match.machine.sensors) {
 			cGenerator.generateCFiles(match.machine.mqttSetup, sensor, rootPath)
 			javaGenerator.generateJavaFiles(match.machine.mqttSetup, sensor, rootPath)
+			patternGenerator.generatePatterns(sensor, rootPath)
 		}
 	].build
 	

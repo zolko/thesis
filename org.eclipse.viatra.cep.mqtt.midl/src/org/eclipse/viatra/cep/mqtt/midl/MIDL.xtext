@@ -16,10 +16,6 @@ MqttSetup:
 	"}" 
 ;
 
-DataType:
-	name = ("int" | "string" | "boolean" | "float")
-;
-
 Message:
 	"message" "{"
 		"name" name = ID
@@ -35,31 +31,22 @@ terminal FLOAT:
 	INT "." INT "f"
 ;
 
-Value:
-	{IntLiteral} value = INT |
-	{StringLiteral} value = STRING |
-	{BooleanLiteral} value = ("true" | "false") |
-	{FloatLiteral} value = FLOAT
+terminal BOOLEAN:
+	"true" | "false"
 ;
 
 DataParameter:
-	"parameter" type = DataType name = ID ("=" value = Value)? ("(" criteria += Criteria (criteria += Criteria)* ")")?
+	{IntParameter} "parameter" type = "int" name = ID ("=" value = INT)? ("(" criteria += Criterion (criteria += Criterion)* ")")? |
+	{FloatParameter} "parameter" type = "float" name = ID ("=" value = FLOAT)? ("(" criteria += Criterion (criteria += Criterion)* ")")? |
+	{StringParameter} "parameter" type = "string" name = ID ("=" value = STRING)? ("(" criteria += Criterion (criteria += Criterion)* ")")? |
+	{BooleanParameter} "parameter" type = "boolean" name = ID ("=" value = BOOLEAN)? ("(" criteria += Criterion (criteria += Criterion)* ")")?
 ;
 
-Criteria:
-	critPrefix = CritPrefix critValue = CritValue
-;
-
-CritPrefix:
-	{NumberCritPrefix} prefix = ("min" | "max" | "eq" | "neq") |
-	{NonNumberCritPrefix} prefix = ("is" | "not")
-;
-
-CritValue:
-	{IntCritValue} value = INT |
-	{FloatCritValue} value = FLOAT | 
-	{BooleanCritValue} value = ("true" | "false") |
-	{StringCritValue} value = STRING
+Criterion:
+	{IntCriterion} prefix = ("min" | "max" | "eq" | "neq") value = INT |
+	{FloatCriterion} prefix = ("min" | "max" | "eq" | "neq") value = FLOAT |
+	{StringCriterion} prefix = ("eq" | "neq") value = STRING |
+	{BooleanCriterion} prefix = ("eq" | "neq") value = BOOLEAN
 ;
 
 MessageParameter:

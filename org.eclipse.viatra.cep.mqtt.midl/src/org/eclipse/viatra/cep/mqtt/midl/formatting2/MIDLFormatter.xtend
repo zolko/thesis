@@ -4,12 +4,16 @@
 package org.eclipse.viatra.cep.mqtt.midl.formatting2
 
 import com.google.inject.Inject
-import org.eclipse.viatra.cep.mqtt.midl.mIDL.Criteria
+import org.eclipse.viatra.cep.mqtt.midl.mIDL.BooleanParameter
+import org.eclipse.viatra.cep.mqtt.midl.mIDL.Criterion
 import org.eclipse.viatra.cep.mqtt.midl.mIDL.DataParameter
+import org.eclipse.viatra.cep.mqtt.midl.mIDL.FloatParameter
+import org.eclipse.viatra.cep.mqtt.midl.mIDL.IntParameter
 import org.eclipse.viatra.cep.mqtt.midl.mIDL.Machine
 import org.eclipse.viatra.cep.mqtt.midl.mIDL.Message
 import org.eclipse.viatra.cep.mqtt.midl.mIDL.MessageParameter
 import org.eclipse.viatra.cep.mqtt.midl.mIDL.Sensor
+import org.eclipse.viatra.cep.mqtt.midl.mIDL.StringParameter
 import org.eclipse.viatra.cep.mqtt.midl.services.MIDLGrammarAccess
 import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
@@ -39,17 +43,31 @@ class MIDLFormatter extends AbstractFormatter2 {
 		}
 	}
 
-	def dispatch void format(DataParameter dataParameter, extension IFormattableDocument document) {
+	def dispatch void format(IntParameter intParameter, extension IFormattableDocument document) {
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
-		format(dataParameter.getType(), document);
-		format(dataParameter.getValue(), document);
-		for (Criteria criteria : dataParameter.getCriteria()) {
+		for (Criterion criteria : intParameter.getCriteria()) {
 			format(criteria, document);
 		}
 	}
 
-	def dispatch void format(Criteria criteria, extension IFormattableDocument document) {
+	def dispatch void format(FloatParameter floatParameter, extension IFormattableDocument document) {
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
-		format(criteria.getCritValue(), document);
+		for (Criterion criteria : floatParameter.getCriteria()) {
+			format(criteria, document);
+		}
+	}
+
+	def dispatch void format(StringParameter stringParameter, extension IFormattableDocument document) {
+		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
+		for (Criterion criteria : stringParameter.getCriteria()) {
+			format(criteria, document);
+		}
+	}
+
+	def dispatch void format(BooleanParameter booleanParameter, extension IFormattableDocument document) {
+		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
+		for (Criterion criteria : booleanParameter.getCriteria()) {
+			format(criteria, document);
+		}
 	}
 }

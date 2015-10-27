@@ -13,9 +13,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="MqttSetup">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="brokerUrl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DataType">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Message">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="dataParameters" upperBound="-1"
@@ -24,26 +21,15 @@
         eType="#//MessageParameter" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="qos" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Value"/>
   <eClassifiers xsi:type="ecore:EClass" name="DataParameter">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//DataType"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value"
-        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="criteria" upperBound="-1"
-        eType="#//Criteria" containment="true"/>
+        eType="#//Criterion" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Criteria">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="critPrefix" eType="#//CritPrefix"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="critValue" eType="#//CritValue"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CritPrefix">
+  <eClassifiers xsi:type="ecore:EClass" name="Criterion">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="prefix" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CritValue"/>
   <eClassifiers xsi:type="ecore:EClass" name="MessageParameter">
     <eStructuralFeatures xsi:type="ecore:EReference" name="message" eType="#//Message"/>
   </eClassifiers>
@@ -52,30 +38,28 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="messages" unique="false"
         upperBound="-1" eType="#//Message"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IntLiteral" eSuperTypes="#//Value">
+  <eClassifiers xsi:type="ecore:EClass" name="IntParameter" eSuperTypes="#//DataParameter">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StringLiteral" eSuperTypes="#//Value">
+  <eClassifiers xsi:type="ecore:EClass" name="FloatParameter" eSuperTypes="#//DataParameter">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BooleanLiteral" eSuperTypes="#//Value">
+  <eClassifiers xsi:type="ecore:EClass" name="StringParameter" eSuperTypes="#//DataParameter">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FloatLiteral" eSuperTypes="#//Value">
+  <eClassifiers xsi:type="ecore:EClass" name="BooleanParameter" eSuperTypes="#//DataParameter">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NumberCritPrefix" eSuperTypes="#//CritPrefix"/>
-  <eClassifiers xsi:type="ecore:EClass" name="NonNumberCritPrefix" eSuperTypes="#//CritPrefix"/>
-  <eClassifiers xsi:type="ecore:EClass" name="IntCritValue" eSuperTypes="#//CritValue">
+  <eClassifiers xsi:type="ecore:EClass" name="IntCriterion" eSuperTypes="#//Criterion">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FloatCritValue" eSuperTypes="#//CritValue">
+  <eClassifiers xsi:type="ecore:EClass" name="FloatCriterion" eSuperTypes="#//Criterion">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BooleanCritValue" eSuperTypes="#//CritValue">
+  <eClassifiers xsi:type="ecore:EClass" name="StringCriterion" eSuperTypes="#//Criterion">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StringCritValue" eSuperTypes="#//CritValue">
+  <eClassifiers xsi:type="ecore:EClass" name="BooleanCriterion" eSuperTypes="#//Criterion">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>
