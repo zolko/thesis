@@ -1,0 +1,70 @@
+grammar org.eclipse.viatra.cep.mqtt.midl.MIDL with org.eclipse.xtext.common.Terminals
+
+generate mIDL "http://www.eclipse.org/viatra/cep/mqtt/midl/MIDL"
+
+Machine:
+	(
+		mqttSetup = MqttSetup
+		(messages += Message)*
+		(sensors += Sensor)*
+	)
+;
+
+MqttSetup:
+	"mqttSetup" "{"
+		"brokerUrl" brokerUrl = STRING
+	"}" 
+;
+
+DataType:
+	name = ("int" | "string" | "boolean" | "float")
+;
+
+Message:
+	"message" "{"
+		"name" name = ID
+		(
+			(dataParameters += DataParameter) |
+			(messageParameters += MessageParameter)
+		)*
+		("qos" qos = INT)?
+	"}"
+;
+
+terminal FLOAT:
+	INT "." INT "f"
+;
+
+Value:
+	{IntLiteral} value = INT |
+	{StringLiteral} value = STRING |
+	{BooleanLiteral} value = ("true" | "false") |
+	{FloatLiteral} value = FLOAT
+;
+
+DataParameter:
+	"parameter" type = DataType name = ID ("=" value = Value)? ("(" criteria += Criteria (criteria += Criteria)* ")")?
+;
+
+Criteria:
+	critPrefix = ("min" | "max") critValue = CritValue
+;
+
+CritValue:
+	{IntCriteria} value = INT |
+	{FloatCriteria} value = FLOAT | 
+	{BooleanCriteria} value = ("true" | "false") |
+	{StringCriteria} value = STRING
+;
+
+MessageParameter:
+	"parameter" message = [Message]
+;
+
+Sensor:
+	"sensor" "{"
+		"name" name = ID
+		"messages" messages += [Message]
+		("," messages += [Message])*
+	"}"
+;
