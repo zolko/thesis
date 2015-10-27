@@ -3,27 +3,28 @@
  */
 package org.eclipse.viatra.cep.mqtt.midl.validation
 
-import org.eclipse.viatra.cep.mqtt.midl.mIDL.BooleanCriteria
+import org.eclipse.viatra.cep.mqtt.midl.mIDL.BooleanCritValue
 import org.eclipse.viatra.cep.mqtt.midl.mIDL.BooleanLiteral
 import org.eclipse.viatra.cep.mqtt.midl.mIDL.DataParameter
-import org.eclipse.viatra.cep.mqtt.midl.mIDL.FloatCriteria
+import org.eclipse.viatra.cep.mqtt.midl.mIDL.FloatCritValue
 import org.eclipse.viatra.cep.mqtt.midl.mIDL.FloatLiteral
-import org.eclipse.viatra.cep.mqtt.midl.mIDL.IntCriteria
+import org.eclipse.viatra.cep.mqtt.midl.mIDL.IntCritValue
 import org.eclipse.viatra.cep.mqtt.midl.mIDL.IntLiteral
-import org.eclipse.viatra.cep.mqtt.midl.mIDL.StringCriteria
+import org.eclipse.viatra.cep.mqtt.midl.mIDL.MIDLPackage
+import org.eclipse.viatra.cep.mqtt.midl.mIDL.NonNumberCritPrefix
+import org.eclipse.viatra.cep.mqtt.midl.mIDL.NumberCritPrefix
+import org.eclipse.viatra.cep.mqtt.midl.mIDL.StringCritValue
 import org.eclipse.viatra.cep.mqtt.midl.mIDL.StringLiteral
 import org.eclipse.xtext.validation.Check
-import org.eclipse.viatra.cep.mqtt.midl.mIDL.MIDLPackage
 
 //import org.eclipse.xtext.validation.Check
-
 /**
  * This class contains custom validation rules. 
- *
+ * 
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 class MIDLValidator extends AbstractMIDLValidator {
-	
+
 	@Check
 	def checkParameterValueIsValid(DataParameter dataParameter) {
 		if (dataParameter.value != null) {
@@ -38,22 +39,43 @@ class MIDLValidator extends AbstractMIDLValidator {
 			}
 		}
 	}
-	
+
 	@Check
-	def checkParameterCriteriaType(DataParameter dataParameter) {
+	def checkParameterCriteriaPrefixType(DataParameter dataParameter) {
 		if (!dataParameter.criteria.empty) {
 			for (crit : dataParameter.criteria) {
-				if (dataParameter.type.name == "int" && !(crit.critValue instanceof IntCriteria)) {
-					error("The criteria must be int type", MIDLPackage.Literals.DATA_PARAMETER__CRITERIA, "invalidCriteria")
-				} else if (dataParameter.type.name == "float" && !(crit.critValue instanceof FloatCriteria)) {
-					error("The criteria must be float type", MIDLPackage.Literals.DATA_PARAMETER__CRITERIA, "invalidCriteria")
-				} else if (dataParameter.type.name == "boolean" && !(crit.critValue instanceof BooleanCriteria)) {
-					error("The criteria must be boolean type", MIDLPackage.Literals.DATA_PARAMETER__CRITERIA, "invalidCriteria")
-				} else if (dataParameter.type.name == "String" && !(crit.critValue instanceof StringCriteria)) {
-					error("The criteria must be String type", MIDLPackage.Literals.DATA_PARAMETER__CRITERIA, "invalidCriteria")
+				if ((dataParameter.type.name == "int" || dataParameter.type.name == "float") &&
+					!(crit.critPrefix instanceof NumberCritPrefix)) {
+					error("The criteria prefix must be number type", MIDLPackage.Literals.DATA_PARAMETER__CRITERIA,
+						"invalidCriteria")
+				} else if ((dataParameter.type.name == "boolean" || dataParameter.type.name == "string") &&
+					!(crit.critPrefix instanceof NonNumberCritPrefix)) {
+					error("The criteria prefix must be non-number type", MIDLPackage.Literals.DATA_PARAMETER__CRITERIA,
+						"invalidCriteria")
 				}
 			}
 		}
 	}
-	
+
+	@Check
+	def checkParameterCriteriaValueType(DataParameter dataParameter) {
+		if (!dataParameter.criteria.empty) {
+			for (crit : dataParameter.criteria) {
+				if (dataParameter.type.name == "int" && !(crit.critValue instanceof IntCritValue)) {
+					error("The criteria value must be int type", MIDLPackage.Literals.DATA_PARAMETER__CRITERIA,
+						"invalidCriteria")
+				} else if (dataParameter.type.name == "float" && !(crit.critValue instanceof FloatCritValue)) {
+					error("The criteria value must be float type", MIDLPackage.Literals.DATA_PARAMETER__CRITERIA,
+						"invalidCriteria")
+				} else if (dataParameter.type.name == "boolean" && !(crit.critValue instanceof BooleanCritValue)) {
+					error("The criteria value must be boolean type", MIDLPackage.Literals.DATA_PARAMETER__CRITERIA,
+						"invalidCriteria")
+				} else if (dataParameter.type.name == "String" && !(crit.critValue instanceof StringCritValue)) {
+					error("The criteria value must be String type", MIDLPackage.Literals.DATA_PARAMETER__CRITERIA,
+						"invalidCriteria")
+				}
+			}
+		}
+	}
+
 }

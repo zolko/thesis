@@ -47,14 +47,19 @@ DataParameter:
 ;
 
 Criteria:
-	critPrefix = ("min" | "max") critValue = CritValue
+	critPrefix = CritPrefix critValue = CritValue
+;
+
+CritPrefix:
+	{NumberCritPrefix} prefix = ("min" | "max" | "eq" | "neq") |
+	{NonNumberCritPrefix} prefix = ("is" | "not")
 ;
 
 CritValue:
-	{IntCriteria} value = INT |
-	{FloatCriteria} value = FLOAT | 
-	{BooleanCriteria} value = ("true" | "false") |
-	{StringCriteria} value = STRING
+	{IntCritValue} value = INT |
+	{FloatCritValue} value = FLOAT | 
+	{BooleanCritValue} value = ("true" | "false") |
+	{StringCritValue} value = STRING
 ;
 
 MessageParameter:

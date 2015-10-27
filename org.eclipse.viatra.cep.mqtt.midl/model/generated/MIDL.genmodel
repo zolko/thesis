@@ -32,8 +32,11 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MIDL.ecore#//DataParameter/criteria"/>
     </genClasses>
     <genClasses ecoreClass="MIDL.ecore#//Criteria">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MIDL.ecore#//Criteria/critPrefix"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MIDL.ecore#//Criteria/critPrefix"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MIDL.ecore#//Criteria/critValue"/>
+    </genClasses>
+    <genClasses ecoreClass="MIDL.ecore#//CritPrefix">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MIDL.ecore#//CritPrefix/prefix"/>
     </genClasses>
     <genClasses ecoreClass="MIDL.ecore#//CritValue"/>
     <genClasses ecoreClass="MIDL.ecore#//MessageParameter">
@@ -55,17 +58,19 @@
     <genClasses ecoreClass="MIDL.ecore#//FloatLiteral">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MIDL.ecore#//FloatLiteral/value"/>
     </genClasses>
-    <genClasses ecoreClass="MIDL.ecore#//IntCriteria">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MIDL.ecore#//IntCriteria/value"/>
+    <genClasses ecoreClass="MIDL.ecore#//NumberCritPrefix"/>
+    <genClasses ecoreClass="MIDL.ecore#//NonNumberCritPrefix"/>
+    <genClasses ecoreClass="MIDL.ecore#//IntCritValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MIDL.ecore#//IntCritValue/value"/>
     </genClasses>
-    <genClasses ecoreClass="MIDL.ecore#//FloatCriteria">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MIDL.ecore#//FloatCriteria/value"/>
+    <genClasses ecoreClass="MIDL.ecore#//FloatCritValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MIDL.ecore#//FloatCritValue/value"/>
     </genClasses>
-    <genClasses ecoreClass="MIDL.ecore#//BooleanCriteria">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MIDL.ecore#//BooleanCriteria/value"/>
+    <genClasses ecoreClass="MIDL.ecore#//BooleanCritValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MIDL.ecore#//BooleanCritValue/value"/>
     </genClasses>
-    <genClasses ecoreClass="MIDL.ecore#//StringCriteria">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MIDL.ecore#//StringCriteria/value"/>
+    <genClasses ecoreClass="MIDL.ecore#//StringCritValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MIDL.ecore#//StringCritValue/value"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
